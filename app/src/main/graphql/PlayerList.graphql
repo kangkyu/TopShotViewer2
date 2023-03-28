@@ -1,0 +1,9 @@
+query PlayerList {
+    allPlayers {
+        size
+        data {
+            id
+            name
+        }
+    }
+}
