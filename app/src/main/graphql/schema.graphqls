@@ -1,0 +1,8152 @@
+type AccountFirstPurchaseAgeError {
+  accountFirstPurchaseAgeMinutesLeft: Int!
+
+  accountFirstPurchaseAgeSecondsLeft: Int!
+}
+
+type Activities implements SortableCollection {
+  size: Int
+
+  data: [Activity!]!
+}
+
+type Activity implements Sortable {
+  id: ID!
+
+  sortID: SortID
+
+  subject: ActivitySubject
+
+  status: ActivityStatus
+
+  createdAt: Time
+
+  updatedAt: Time
+
+  activityType: ActivityType
+
+  isRead: Boolean
+}
+
+type ActivityFilters {
+  byUnread: Boolean
+
+  byStatus: [ActivityStatus!]
+
+  byType: [ActivityType!]
+}
+
+input ActivityFiltersInput {
+  byUnread: Boolean
+
+  byStatus: [ActivityStatus!]
+
+  byType: [ActivityType!]
+}
+
+enum ActivitySortType {
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  UPDATED_AT_ASC
+
+  UPDATED_AT_DESC
+}
+
+enum ActivityStatus {
+  PENDING
+
+  SUCCESS
+
+  FAILED
+}
+
+union ActivitySubject = PurchaseVendorMomentActivity|PurchaseP2PMomentActivity|P2PMomentListingActivity|P2PMomentListingCancellationActivity|P2PMomentListingSoldActivity|PurchasePackActivity|MomentTransferRequestActivity|MomentTransferReceivedActivity|MomentTradeInRequestActivity|MomentsTradeInRequestActivity|OfferAvailableActivity|OfferCompletedActivity|SpecialNftPurchasedActivity|SpecialNftSoldActivity
+
+enum ActivityType {
+  PURCHASE_VENDOR_MOMENT
+
+  P2P_MOMENT_LISTING
+
+  P2P_MOMENT_LISTING_CANCELLATION
+
+  P2P_MOMENT_LISTING_SOLD
+
+  PURCHASE_P2P_MOMENT
+
+  PURCHASE_PACK
+
+  MOMENT_TRANSFER_REQUEST
+
+  MOMENT_TRANSFER_RECEIVED
+
+  MOMENT_TRADE_IN_REQUEST
+
+  PURCHASE_PACK_WITH_TICKETS
+
+  MOMENTS_TRADE_IN_REQUEST
+
+  OFFER_AVAILABLE
+
+  OFFER_COMPLETED
+
+  SPECIAL_NFT_PURCHASED
+
+  SPECIAL_NFT_SOLD
+}
+
+input AddEditionToWatchlistInput {
+  watchlistId: ID
+
+  playID: String!
+
+  setID: String!
+}
+
+type AddEditionToWatchlistResponse {
+  success: Boolean!
+}
+
+input AddMomentsToGroupsInput {
+  momentIDs: [String!]
+
+  momentGroupIDs: [String!]
+}
+
+type AddMomentsToGroupsResponse {
+  groupMomentIDs: [String!]
+}
+
+input AddUserMarketingCampaignRequest {
+  campaign: String!
+}
+
+type AddUserMarketingCampaignResponse {
+  isAdded: Boolean!
+}
+
+input AddUserReferralRequest {
+  referralCode: String!
+
+  referralType: ReferralType!
+}
+
+type AddUserReferralResponse {
+  isAdded: Boolean!
+}
+
+input AllPlayersByLeaguesInput {
+  leagues: [League]!
+}
+
+input AllTeamsByLeaguesInput {
+  leagues: [League]!
+}
+
+type AllstarSetMetadata {
+  teamID: String
+}
+
+type Auction {
+  listingID: Int!
+
+  maxBid: Price!
+
+  maxBidWalletID: String!
+
+  saleEndDate: Time!
+}
+
+input AuthenticateInput {
+  code: String!
+
+  redirectUrl: String
+
+  source: String
+}
+
+type AuthenticateResponse {
+  idToken: String!
+
+  refreshToken: String!
+}
+
+input AuthorizeMarketplacePackPurchaseInput {
+  userFlowAddress: String!
+
+  signable: String!
+
+  nftType: String!
+}
+
+type AuthorizeMarketplacePackPurchaseResponse {
+  signature: String!
+}
+
+input AuthorizePackNFTsMintingInput {
+  signable: String!
+
+  mintType: SignableType!
+}
+
+type AuthorizePackNFTsMintingResponse {
+  signature: String!
+}
+
+type BallerStatusLevel {
+  label: BallerStatusLevelLabel
+
+  pointThreshold: Int
+}
+
+enum BallerStatusLevelLabel {
+  STREET_BALLER
+
+  ROOK
+
+  RISING_STAR
+
+  VET
+
+  ELITE
+
+  ALL_STAR
+}
+
+type BallerStatusLevels {
+  levels: [BallerStatusLevel]
+}
+
+enum BallerStatusMilestoneLabel {
+  BUY_FIRST_PACK
+
+  COMMON_PACK_PURCHASE
+
+  RARE_PACK_PURCHASE
+
+  LEGENDARY_PACK_PURCHASE
+
+  BUILD_SHOWCASE
+
+  COLLECT_COMMON_PACK_MOMENTS
+
+  COLLECT_RARE_PACK_MOMENTS
+
+  COLLECT_LEGENDARY_PACK_MOMENTS
+
+  EARLY_ADOPTER
+
+  CHALLENGE_COMPLETION
+
+  LIST_FIRST_MOMENT_FOR_SALE
+
+  SELL_MOMENT
+
+  COLLECT_FAVORITE_TEAM_MOMENT
+
+  COLLECT_PLAYS_DUNK
+}
+
+enum BallerStatusTaskStatus {
+  ACTIVE
+
+  COMPLETE
+}
+
+input BaseSearchInput {
+  pagination: PaginationInput!
+}
+
+type Bonus {
+  """
+  id is a human readable ID, i.e. cool_cats, net_spend
+  """
+  id: String!
+
+  score: Int @deprecated(reason: "score is deprecated. Use id only")
+}
+
+"""
+The `Boolean` scalar type represents `true` or `false`.
+"""
+scalar Boolean
+
+type BurnedEdition {
+  setID: String
+
+  playID: String
+
+  subeditionID: Int
+
+  flowSeriesNumber: Int
+
+  flowName: String
+
+  visualID: VisualIdType
+
+  headline: String
+
+  assetPathPrefix: String
+
+  momentCount: Int
+
+  totalMomentCount: Int
+}
+
+enum CSInterval {
+  DAILY
+
+  WEEKLY
+
+  MONTHLY
+
+  YEARLY
+}
+
+type Campaign {
+  id: ID!
+
+  slug: String
+
+  title: String!
+
+  description: String!
+
+  imageUrl: String!
+
+  startAt: Time!
+
+  endAt: Time!
+
+  visibility: CampaignVisibility!
+
+  reward: CampaignReward!
+
+  events: [CampaignEvent!]
+}
+
+type CampaignEvent {
+  id: ID!
+
+  category: String!
+
+  title: String!
+
+  description: String!
+
+  actionLink: String
+
+  timesRequired: Int!
+
+  validFrom: Time!
+
+  validTo: Time!
+
+  userProgress: UserCampaignEventProgress
+}
+
+type CampaignReward {
+  id: ID!
+
+  title: String!
+
+  description: String!
+
+  imageUrl: String!
+
+  videoUrl: String!
+}
+
+enum CampaignVisibility {
+  PUBLIC
+
+  DRAFT
+}
+
+input CancelMomentSaleInput {
+  orderID: String!
+
+  redirectURL: String!
+}
+
+type CancelMomentSaleResponse {
+  orderID: String!
+}
+
+input CancelPurchasePackInput {
+  orderID: String!
+}
+
+type CancelPurchasePackResponse {
+  success: Boolean!
+}
+
+input CancelReservationInput {
+  id: ID!
+}
+
+type CancelReservationResponse {
+  error: CancelReservationResponseError
+}
+
+enum CancelReservationResponseError {
+  RESERVATION_NOT_FOUND
+
+  RESERVATION_NOT_APPROVED
+}
+
+enum Chain {
+  PUBLIC_MAIN_NET
+
+  TS_MAIN_NET
+
+  PUBLIC_TEST_NET
+
+  TS_TEST_NET
+}
+
+enum ChallengeCompletionStateFilter {
+  COMPLETED
+
+  NOT_COMPLETED
+}
+
+enum ChallengeExpiryStateFilter {
+  ACTIVE
+
+  EXPIRED
+}
+
+type ChallengeFilters {
+  byUserID: String
+
+  byChallengeCompletionState: ChallengeCompletionStateFilter
+
+  byChallengeExpiryState: ChallengeExpiryStateFilter
+
+  byChallengeTypes: [ChallengeType!]
+
+  byLoggedDapperId: String
+
+  byHasUserSubmission: Boolean @deprecated(reason: "byHasValidUserSubmission should be used")
+
+  byHasValidUserSubmission: Boolean
+
+  byVariableChallengeCategories: [VariableChallengeCategory!]
+
+  byChallengeVisibilities: [ChallengeVisibility!]
+
+  byAttributes: Map
+}
+
+input ChallengeFiltersInput {
+  byUserID: String
+
+  byChallengeCompletionState: ChallengeCompletionStateFilter
+
+  byChallengeExpiryState: ChallengeExpiryStateFilter
+
+  byChallengeTypes: [ChallengeType!]
+
+  byLoggedDapperId: String
+
+  byHasUserSubmission: Boolean
+
+  byHasValidUserSubmission: Boolean
+
+  byVariableChallengeCategories: [VariableChallengeCategory!]
+
+  """
+  Filter by visibilities, only internal users (set in challengeVisibility FF) can set this filter, default is Public
+  """
+  byChallengeVisibilities: [ChallengeVisibility!]
+
+  byAttributes: Map
+}
+
+type ChallengeProgress {
+  challenge: UserChallenge
+
+  numTotalSlots: Int
+
+  numFilledSlots: Int
+}
+
+type ChallengeReward {
+  playID: String
+
+  setID: String
+
+  assetPathPrefix: String
+}
+
+enum ChallengeRewardStatus {
+  PENDING
+
+  RECEIVED
+}
+
+type ChallengeSlot {
+  playID: String
+
+  setID: String
+
+  filledMomentID: ID
+}
+
+enum ChallengeSortType {
+  EXPIRATION_DATE_ASC
+
+  EXPIRATION_DATE_DESC
+}
+
+enum ChallengeType {
+  TRADITIONAL
+
+  SHOWCASE
+
+  VARIABLE
+}
+
+enum ChallengeVisibility {
+  NONE
+
+  PRIVATE
+
+  PUBLIC
+
+  HIDDEN
+}
+
+type ChallengesProgress {
+  progress: [ChallengeProgress!]
+}
+
+type ChallengesSearchSummary {
+  filters: ChallengeFilters
+
+  searchSummary: SearchSummary
+
+  sortBy: ChallengeSortType
+}
+
+input CheckActiveChallengeSubmissionsByMomentIDInput {
+  momentID: ID!
+
+  ignoreSubmissionID: ID
+
+  variableChallengeCategories: [VariableChallengeCategory!]
+}
+
+type CheckActiveChallengeSubmissionsByMomentIDResponse {
+  isUsed: Boolean!
+}
+
+input CheckExistingP2POrdersInput {
+  momentID: ID!
+}
+
+type CheckExistingP2POrdersResponse {
+  ordersExist: Boolean!
+}
+
+type CodexFilters {
+  bySeries: SeriesFilter
+}
+
+input CodexFiltersInput {
+  bySeries: SeriesFilter
+}
+
+type CodexSet {
+  set: Set
+
+  totalEditionSlots: Int
+
+  filledEditionSlots: Int
+
+  uniqueMoments: Int
+
+  hasChallengeReward: Boolean
+
+  isCompleted: Boolean!
+
+  completedAt: Time
+}
+
+type CodexSetWithEditions {
+  codexSet: CodexSet
+
+  editionSlots: [EditionSlot]
+}
+
+type Collectible {
+  id: ID!
+
+  playID: ID!
+
+  setID: ID!
+
+  chain: Chain
+
+  mintNumber: Int!
+}
+
+type CollectorBonus {
+  bonusId: String!
+
+  bonusPts: Int
+
+  qualified: Boolean
+}
+
+type CollectorBonusData {
+  name: String!
+
+  bonusTotal: Int
+
+  bonuses: [CollectorBonus]
+}
+
+type CollectorChallengeCounts {
+  challengeRewards: Int
+
+  challengeCompletions: Int
+}
+
+type CollectorEdition {
+  quantity: Int
+
+  setName: String
+
+  visualId: Int
+
+  seriesNumber: Int
+
+  challengeReward: Boolean
+
+  challengeCompleted: Boolean
+
+  playerId: String
+
+  teamId: String
+
+  editionId: String
+
+  league: String
+
+  moments: [CollectorMoment]
+}
+
+type CollectorIntervalData {
+  score: Int
+
+  interval: CSInterval
+}
+
+type CollectorMoment {
+  acquiredAt: Time
+
+  serialNumber: Int
+
+  collectorScorePts: CollectorScorePts
+}
+
+type CollectorPlayerTeamData {
+  playerId: ID!
+
+  playerName: String
+
+  owned: Boolean
+}
+
+type CollectorScore {
+  dapperId: String
+
+  score: Int
+
+  incrementScoreByMoment: Int
+
+  incrementScoreSinceDate: Int
+
+  incrementScoreByTeam: Int
+
+  incrementScoreByWNBA: Int
+
+  decrementScoreByMoment: Int
+
+  decrementScoreByMoments: Int
+
+  favoriteTeamId: String
+
+  teamData: [CollectorScoreTeamCompletion]
+
+  decrementedTeamData: [CollectorScoreTeamCompletion]
+
+  setData: [CollectorSetData]
+
+  decrementedSetData: [CollectorSetData]
+
+  seriesData: [CollectorSeriesData]
+
+  decrementedSeriesData: [CollectorSeriesData]
+
+  bonusData: [CollectorBonusData]
+
+  intervalData: [CollectorIntervalData]
+
+  momentData: [CollectorEdition]
+
+  specialNFTData: [CollectorSpecialNFT]
+}
+
+type CollectorScorePts {
+  teamCompletionPts: Int
+
+  setCompletionPts: Int
+
+  seriesPts: Int
+
+  totalPts: Int
+}
+
+input CollectorScoreRequestBonusGroup {
+  name: String!
+
+  bonusIds: [String!]
+}
+
+type CollectorScoreTeamCompletion {
+  teamId: ID!
+
+  teamName: String
+
+  teamScore: Int
+
+  seriesCounts: [CollectorTeamSeriesCounts]
+}
+
+type CollectorSeriesCount {
+  total: Int
+
+  title: String
+
+  challengeCounts: CollectorChallengeCounts
+}
+
+type CollectorSeriesData {
+  seriesNumber: Int
+
+  title: String
+
+  challengeTitle: String
+
+  commonBase: CollectorSeriesCount
+
+  commonSE: CollectorSeriesCount
+
+  commonPromo: CollectorSeriesCount
+
+  fandom: CollectorSeriesCount
+
+  rare: CollectorSeriesCount
+
+  legendary: CollectorSeriesCount
+
+  anthology: CollectorSeriesCount
+}
+
+type CollectorSetData {
+  setId: ID!
+
+  setImage: String
+
+  setName: String
+
+  seriesNumber: Int
+
+  total: Int
+
+  owned: Int
+
+  isComplete: Boolean
+}
+
+type CollectorSpecialNFT {
+  flowId: Int
+
+  flowSetId: Int
+
+  teamId: String
+
+  acquiredAt: Time
+
+  momentTopshotScore: MomentTopshotScore
+}
+
+type CollectorTeamSeriesCounts {
+  seriesNumber: Int
+
+  owned: Int
+
+  total: Int
+
+  isComplete: Boolean
+
+  players: [CollectorPlayerTeamData]
+}
+
+input CompleteCampaignEventInput {
+  category: String!
+
+  context: String!
+}
+
+type CompleteCampaignEventResponse {
+  success: Boolean!
+}
+
+type CompletedUserChallenge {
+  challenge: UserChallenge
+
+  rewardStatus: ChallengeRewardStatus
+}
+
+enum ConfirmPackPurchaseError {
+  ORDER_NOT_FOUND
+
+  PACKS_NOT_RESERVED
+
+  PACK_LISTING_NOT_FOUND
+
+  RECEIPT_INVALID
+}
+
+input ConfirmPackPurchaseInput {
+  receipt: String
+
+  orderID: String
+
+  appStoreProductID: String
+
+  paymentProvider: PaymentProvider!
+}
+
+type ConfirmPackPurchaseResponse {
+  error: ConfirmPackPurchaseError
+
+  orderID: ID
+}
+
+type CountSummary {
+  count: Int
+}
+
+input CreateBulkMomentTradeInRequestInput {
+  momentIDs: [ID!]
+
+  momentFlowIDs: [String!]
+
+  redirectURL: String!
+
+  title: String!
+
+  image: String!
+}
+
+type CreateBulkMomentTradeInRequestResponse {
+  RequestID: String!
+}
+
+enum CreateDropSquadError {
+  """
+  The user is already associated with another squad
+  """
+  ALREADY_ASSOCIATED
+
+  """
+  The pack listing does not exist
+  """
+  INVALID_PACK_LISTING
+}
+
+input CreateDropSquadInput {
+  packListingID: ID!
+}
+
+type CreateDropSquadResponse {
+  dropSquadID: ID
+
+  error: CreateDropSquadError
+}
+
+input CreateGiftPacksInput {
+  packs: [GiftPack]!
+}
+
+type CreateGiftPacksResponse {
+  draftGiftPacks: [DraftGiftPack]
+}
+
+input CreateMarketplaceReservationCriteriaInput {
+  parentID: Int
+
+  price: Int
+}
+
+input CreateMarketplaceReservationInput {
+  buyerAddress: String!
+
+  nftType: String!
+
+  nftID: Int
+
+  criteria: CreateMarketplaceReservationCriteriaInput
+}
+
+type CreateMarketplaceReservationResponse {
+  nftID: Int!
+
+  listingResourceID: Int!
+
+  expiresAt: Time!
+}
+
+input CreateMomentGroupInput {
+  name: String!
+}
+
+type CreateMomentGroupResponse {
+  momentGroup: MomentGroup!
+}
+
+input CreateMomentSaleInput {
+  momentID: String!
+
+  price: Price!
+
+  momentFlowID: String!
+
+  redirectURL: String!
+
+  momentMetaInput: MomentMetaInput
+}
+
+type CreateMomentSaleResponse {
+  orderID: String!
+}
+
+input CreateMomentTradeInRequestInput {
+  momentID: String!
+
+  momentFlowID: String!
+
+  redirectURL: String!
+
+  momentTitle: String!
+
+  momentImage: String!
+}
+
+type CreateMomentTradeInRequestResponse {
+  RequestID: String!
+}
+
+input CreateMomentTransferRequestInput {
+  momentID: String!
+
+  momentFlowID: String!
+
+  receiverDapperID: String!
+
+  """
+  This is the page that dapper will redirect back to for the transfer receipt page.
+  """
+  redirectURL: String!
+
+  """
+  The title and image for the Dapper invocation confirmation display.
+  """
+  momentTitle: String!
+
+  momentImage: String!
+}
+
+input CreateMomentTransferRequestInputV2 {
+  momentID: String!
+
+  momentFlowID: String!
+
+  receiverDapperID: String!
+
+  redirectURL: String!
+
+  momentTitle: String!
+
+  momentImage: String!
+}
+
+type CreateMomentTransferRequestResponse {
+  ID: String!
+
+  validation: MomentTransferValidationResults!
+}
+
+union CreateMomentTransferRequestResult = CreateMomentTransferRequestSuccess|AccountFirstPurchaseAgeError|MomentAgeError|InsufficientMomentsError
+
+type CreateMomentTransferRequestSuccess {
+  ID: String!
+}
+
+input CreatePackPurchaseIntentInput {
+  packListingID: String!
+
+  packListingLevelID: String
+
+  quantity: Int!
+
+  recaptchaToken: String
+
+  queueID: String
+
+  redirectURL: String
+
+  paymentFlow: PackPurchasePaymentFlow
+}
+
+type CreatePackPurchaseIntentResponse {
+  orderID: String
+
+  error: CreatePackPurchaseIntentResponseError
+}
+
+enum CreatePackPurchaseIntentResponseError {
+  INELIGIBLE
+
+  CAPTCHA_FAILED
+
+  INVALID_QUEUE
+
+  EXCEEDED_QUANTITY
+
+  RESERVATION_EXISTS
+}
+
+input CreateVariableChallengeSubmissionInput {
+  challengeID: ID!
+
+  slots: [VariableChallengeSubmissionSlotInput!]!
+}
+
+input CreateWatchlistInput {
+  title: String!
+}
+
+enum Currency {
+  USD
+
+  TICKETS
+
+  DAPPER_CREDIT
+}
+
+scalar Cursor
+
+enum CursorDirection {
+  LEFT
+
+  RIGHT
+}
+
+scalar Date
+
+type DateRangeFilter {
+  start: Time
+
+  end: Time
+}
+
+input DateRangeFilterInput {
+  start: Time
+
+  end: Time
+}
+
+input DeleteMomentGroupInput {
+  momentGroupID: String!
+}
+
+type DeleteMomentGroupResponse {
+  success: Boolean!
+}
+
+input DeleteShowcaseInput {
+  showcaseID: ID!
+}
+
+type DeleteShowcaseResponse {
+  deletedShowcaseID: ID!
+}
+
+input DeleteWatchlistInput {
+  id: ID!
+}
+
+type DeleteWatchlistResponse {
+  success: Boolean!
+}
+
+enum Direction {
+  ASC
+
+  DESC
+}
+
+type DraftGiftPack {
+  commitHash: String!
+
+  distributionFlowID: Int!
+
+  collectibleFlowIDs: [String!]!
+}
+
+type DropSquad {
+  """
+  Autogenerated unique identifier of a squad
+  """
+  id: ID!
+
+  """
+  packListingID is the unique identifier for the pack listing the squad is associated with
+  """
+  packListingID: ID!
+
+  """
+  members will be sorted by joined_at asc to prevent boxes moving around on the FE
+  """
+  members: [DropSquadMember!]!
+}
+
+type DropSquadMember {
+  role: DropSquadMemberRole!
+
+  joinedAt: Time!
+
+  user: User!
+}
+
+enum DropSquadMemberRole {
+  OWNER
+
+  MEMBER
+}
+
+input DuplicateMomentGroupInput {
+  name: String!
+
+  momentGroupFromID: ID!
+}
+
+type DuplicateMomentGroupResponse {
+  momentGroup: MomentGroup!
+}
+
+type DynamicLeaderboardPublic {
+  slug: String!
+
+  title: String!
+
+  description: String!
+
+  subDescription: String!
+
+  bannerImage: String!
+
+  eligibleAt: Time!
+
+  endAt: Time!
+}
+
+type Edition implements Sortable & Syncable {
+  id: ID!
+
+  set: Set
+
+  play: Play
+
+  setPlay: MintedSetPlay!
+
+  parallelSetPlay: MintedSetPlayParallel!
+
+  assetPathPrefix: String
+
+  sortID: SortID
+
+  version: Version
+
+  circulationCount: Int
+
+  flowRetired: Boolean
+
+  state: EditionState
+
+  tags: [Tag]
+
+  parallelID: Int!
+
+  challengeID: ID
+
+  momentTier: MomentTier
+
+  """
+  tier is the same as momentTier
+  """
+  tier: MomentTier
+
+  parallels: [Edition]
+}
+
+type EditionAverageSaleData {
+  averagePrice: Price!
+
+  numDays: Int
+
+  numSales: Int
+}
+
+input EditionFilterInput {
+  bySetIDs: [ID]
+}
+
+type EditionFilters {
+  bySetIDs: [ID]
+}
+
+type EditionListing implements Sortable & Syncable {
+  id: ID!
+
+  version: Version!
+
+  sortID: SortID!
+
+  set: Set
+
+  play: Play
+
+  """
+  setPlay contains setPlay data including tags, circulation count and a retired flag
+  """
+  setPlay: MintedSetPlay!
+
+  """
+  parallelSetPlay contains setPlay data including tags, circulation count and a retired flag
+  """
+  parallelSetPlay: MintedSetPlayParallel!
+
+  assetPathPrefix: String
+
+  """
+  The price range for all the moments available for sale for this editions
+  """
+  priceRange: PriceRange!
+
+  """
+  How many of this edition listing are for sale
+  """
+  editionListingCount: Int!
+
+  """
+  how many of unique seller - edition pairs are on the marketplace
+  """
+  uniqueSellerCount: Int!
+
+  """
+  userOwnedEditionsCount is an amount of Editions(SetPlays) owned by the reqesting user
+  """
+  userOwnedEditionsCount: Int!
+
+  averageSaleData: EditionAverageSaleData
+
+  watchlistData: WatchlistData
+
+  tier: MomentTier
+
+  parallelID: Int
+
+  parallels: [EditionListing]
+
+  userID: ID
+}
+
+input EditionListingFilterInput {
+  bySets: [ID]
+
+  byPlayers: [ID]
+
+  byTeams: [ID]
+
+  byPrimaryPlayerPosition: [PlayerPosition]
+
+  byPrice: PriceRangeFilterInput
+
+  byPower: IntegerRangeFilterInput
+
+  byGameDate: DateRangeFilterInput
+
+  byCreatedAt: DateRangeFilterInput
+
+  byPlayerGameScores: PlayerGameScoresFiltersInput
+
+  bySetVisuals: [VisualIdType]
+
+  byMomentTiers: [MomentTier]
+
+  byPlayIDs: [ID]
+
+  bySeries: [ID]
+
+  byPlayTagIDs: [ID]
+
+  bySetPlayTagIDs: [ID]
+
+  bySerialNumber: IntegerRangeFilterInput
+
+  byPlayCategory: [ID]
+
+  byActiveChallenge: [ID]
+
+  byLeagues: [League]
+
+  byEditions: [EditionsFilterInput]
+
+  byParallelIDs: [Int]
+
+  byRecommendation: RecommendationType
+}
+
+enum EditionListingSortType {
+  PRICE_USD_ASC
+
+  PRICE_USD_DESC
+
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  UPDATED_AT_ASC
+
+  UPDATED_AT_DESC
+
+  GAME_DATE_ASC
+
+  GAME_DATE_DESC
+
+  SERIAL_NUMBER_ASC
+
+  SERIAL_NUMBER_DESC
+
+  PLAYER_FIRST_NAME_ASC
+
+  PLAYER_FIRST_NAME_DESC
+
+  PLAYER_LAST_NAME_ASC
+
+  PLAYER_LAST_NAME_DESC
+
+  MOST_WATCHED_ASC
+
+  MOST_WATCHED_DESC
+
+  RECOMMENDATIONS_ASC
+
+  EDITION_PURCHASED_AT_DESC
+}
+
+type EditionListings implements SortableCollection {
+  size: Int
+
+  data: [EditionListing!]!
+}
+
+type EditionListingsFilters {
+  bySets: [ID]
+
+  byPlayers: [ID]
+
+  byTeams: [ID]
+
+  byPrimaryPlayerPosition: [PlayerPosition]
+
+  byPrice: PriceRangeFilter
+
+  bySerialNumber: IntegerRangeFilter
+
+  byPower: IntegerRangeFilter
+
+  byGameDate: DateRangeFilter
+
+  byCreatedAt: DateRangeFilter
+
+  byPlayerGameScores: PlayerGameScoresFilters
+
+  byPlayTagIDs: [ID]
+
+  bySetPlayTagIDs: [ID]
+
+  bySetVisuals: [VisualIdType]
+
+  byMomentTiers: [MomentTier]
+
+  byPlayIDs: [ID]
+
+  bySeries: [ID]
+
+  byPlayCategory: [ID]
+
+  byActiveChallenge: [ID]
+
+  byLeagues: [League]
+
+  byEditions: [EditionsFilter]
+}
+
+type EditionSlot {
+  edition: Edition
+
+  filledMomentIDs: [String]
+
+  lockedMomentIDs: [String]
+}
+
+enum EditionState {
+  HIDDEN
+
+  VISIBLE
+
+  CHALLENGE_REWARD_UNRELEASED
+
+  CHALLENGE_REWARD_RELEASED
+
+  CHALLENGE_REWARD_COMING_SOON
+}
+
+type Editions implements SortableCollection {
+  size: Int
+
+  data: [Edition!]!
+}
+
+type EditionsFilter {
+  setID: ID!
+
+  playID: ID!
+}
+
+input EditionsFilterInput {
+  setID: ID!
+
+  playID: ID!
+}
+
+type ElasticsearchResponse {
+  took: Int
+
+  timedOut: Boolean
+
+  hits: ElasticsearchResponseHits
+
+  aggregations: Map
+}
+
+type ElasticsearchResponseHits {
+  total: ElasticsearchResponseHitsTotal
+
+  maxScore: Float
+
+  hits: [ElasticsearchResponseHitsHits!]!
+}
+
+type ElasticsearchResponseHitsHits {
+  index: String
+
+  id: String
+
+  score: Float
+
+  source: Map
+}
+
+type ElasticsearchResponseHitsTotal {
+  value: Int
+
+  relation: String
+}
+
+type ExchangeRate {
+  from: ExchangeRateCurrency!
+
+  to: ExchangeRateCurrency!
+
+  rate: String!
+}
+
+enum ExchangeRateCurrency {
+  USD
+
+  ETH
+
+  FLOW
+}
+
+input ExchangeRateInput {
+  from: ExchangeRateCurrency!
+
+  to: ExchangeRateCurrency!
+}
+
+input ExchangeRefreshTokenInput {
+  refreshToken: String!
+}
+
+type ExchangeRefreshTokenResponse {
+  idToken: String!
+
+  newRefreshToken: String!
+}
+
+type Expression {
+  feature: MaxOrderQuantityFeature!
+
+  value: Int!
+
+  comparator: String!
+
+  result: Int!
+}
+
+input ExpressionInput {
+  feature: MaxOrderQuantityFeature!
+
+  value: Int!
+
+  comparator: String!
+
+  result: Int!
+}
+
+enum FeatureFlagKey {
+  P2P
+
+  P2P_DELISTING
+
+  P2P_LISTING
+
+  P2P_PURCHASING
+
+  PACK_OPENING
+
+  PACK_TRANSFERS
+
+  PACKS
+
+  TRANSFERS
+
+  PUBLIC_COLLECTOR_SCORE
+
+  TRADE_INS
+}
+
+type FirstPurchaseReferral {
+  packOrder: PackPurchaseOrder
+
+  p2pOrder: P2PPurchaseOrder
+}
+
+"""
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).
+"""
+scalar Float
+
+enum ForSaleFilter {
+  FOR_SALE
+
+  NOT_FOR_SALE
+}
+
+type GetActiveChallengesResponse {
+  challenges: [UserChallenge!]
+}
+
+type GetActiveDynamicLeaderboardsResponse {
+  leaderboards: [DynamicLeaderboardPublic]!
+}
+
+input GetActiveUserSubmissionsByMomentIDsInput {
+  momentIDs: [ID!]
+
+  ignoreSubmissionID: ID
+
+  variableChallengeCategories: [VariableChallengeCategory!]
+
+  submissionStatuses: [VariableChallengeSubmissionStatus!]
+
+  slotTypes: [VariableChallengeSlotType!]
+}
+
+type GetActiveUserSubmissionsByMomentIDsResponse {
+  momentsUsageData: [MomentUsageData!]
+}
+
+type GetActivityResponse {
+  data: Activity
+}
+
+input GetChallengeByIDInput {
+  challengeID: ID!
+
+  userID: ID
+}
+
+input GetCodexInput {
+  userID: ID
+
+  filters: CodexFiltersInput
+}
+
+type GetCodexResponse {
+  codex: [CodexSet]
+
+  totalUserOwnedMoments: Int
+
+  numSetsInProgress: Int
+
+  numSetsCompleted: Int
+
+  totalUniqueEditionsOwned: Int
+
+  filters: CodexFilters
+}
+
+input GetCodexSetInput {
+  setID: ID!
+
+  userID: ID
+}
+
+type GetCodexSetResponse {
+  codexSetWithEditions: CodexSetWithEditions
+}
+
+input GetCollectorScoreRequest {
+  dapperID: String!
+
+  bonusGroups: [CollectorScoreRequestBonusGroup]
+
+  incrementByMoment: String
+
+  incrementSinceDate: Time
+
+  incrementByTeam: String
+
+  decrementByMoment: String
+
+  decrementByMoments: [String]
+}
+
+input GetDropEligibilityInput {
+  packListingId: ID!
+}
+
+type GetDropEligibilityResponse {
+  normal: Int!
+
+  rare: Int!
+
+  legendary: Int!
+
+  totalSpend: Int!
+
+  eligible: Boolean!
+}
+
+input GetDynamicLeaderboardEntriesInput {
+  slug: String!
+
+  pagination: PaginationInputV2!
+}
+
+type GetDynamicLeaderboardEntriesResponse {
+  entries: [LeaderboardUser]!
+
+  leftCursor: String
+
+  rightCursor: String
+
+  totalCount: Int!
+}
+
+input GetDynamicLeaderboardEntryInput {
+  slug: String!
+
+  flowAddress: String!
+}
+
+type GetDynamicLeaderboardEntryResponse {
+  entry: LeaderboardUser!
+}
+
+type GetDynamicLeaderboardResponse {
+  leaderboard: DynamicLeaderboardPublic!
+}
+
+input GetEditionInput {
+  setID: ID!
+
+  playID: ID!
+}
+
+input GetEditionListingInput {
+  setID: ID!
+
+  playID: ID!
+
+  userID: ID
+
+  parallelID: Int
+}
+
+type GetEditionListingResponse {
+  data: EditionListing
+
+  lowestAskMoment: MintedMoment
+}
+
+type GetEditionResponse {
+  edition: Edition
+}
+
+input GetEditionsWatcherCountInput {
+  editions: [WatchedEditionInput!]!
+}
+
+type GetEditionsWatcherCountResponse {
+  editions: [WatchedEdition!]
+}
+
+input GetExchangeRatesInput {
+  currencies: [ExchangeRateInput!]
+}
+
+type GetExchangeRatesResponse {
+  exchangeRates: [ExchangeRate]
+}
+
+input GetGiftPackURLInput {
+  packFlowID: String!
+}
+
+type GetGiftPackURLResponse {
+  packFlowID: Int!
+
+  redemptionURL: String!
+}
+
+input GetGiftPacksInput {
+  offset: Int = 0
+
+  batchSize: Int = 20
+}
+
+type GetGiftPacksResponse {
+  packs: Packs
+
+  hasNextPage: Boolean
+}
+
+input GetGiftedMomentURLInput {
+  momentID: String!
+
+  transferID: String!
+}
+
+type GetGiftedMomentURLResponse {
+  gifterID: String!
+
+  momentID: String!
+
+  redemptionUrl: String!
+}
+
+input GetHotEditionListingsInput {
+  userID: ID
+}
+
+type GetHotEditionListingsResponse {
+  listings: [EditionListing!]
+}
+
+input GetKYCStatusInput {
+  minFresh: String
+}
+
+type GetKYCStatusResponse {
+  kycStatus: KYCStatus!
+
+  kycType: KycType!
+}
+
+input GetLeaderboardEntryInput {
+  kind: LeaderboardKind!
+
+  id: String!
+
+  flowAddress: String!
+}
+
+input GetLeaderboardEntryRelationshipInput {
+  kind: LeaderboardKind!
+
+  flowAddress: String!
+}
+
+type GetLeaderboardEntryRelationshipResponse {
+  relationships: [LeaderboardEntryRelationship]!
+}
+
+type GetLeaderboardEntryResponse {
+  entry: LeaderboardEntry!
+}
+
+input GetLeaderboardInput {
+  kind: LeaderboardKind!
+
+  id: String!
+
+  sortBy: LeaderboardSortType!
+
+  pagination: PaginationInput!
+}
+
+input GetLeaderboardPotentialInput {
+  flowAddress: String!
+
+  momentIds: [String!]!
+}
+
+type GetLeaderboardPotentialResponse {
+  playerLeaderboards: [LeaderboardPotential]
+
+  teamLeaderboards: [LeaderboardPotential]
+}
+
+type GetLeaderboardResponse {
+  leaderboard: Leaderboard
+
+  pagination: Pagination
+
+  count: Int
+}
+
+input GetMarketplaceTransactionEditionStatsInput {
+  edition: EditionsFilterInput!
+
+  serialNumber: Int
+}
+
+type GetMarketplaceTransactionEditionStatsResponse {
+  editionStats: MarketplaceTransactionEditionStats
+}
+
+type GetMintedMomentProgressForQuestResponse {
+  id: ID!
+
+  current: Int!
+
+  total: Int!
+
+  complete: Boolean!
+}
+
+input GetMintedMomentsInput {
+  momentIds: [ID!]!
+}
+
+type GetMintedMomentsResponse {
+  data: [MintedMoment]
+}
+
+input GetMomentGroupInput {
+  momentGroupSlug: String!
+}
+
+type GetMomentGroupResponse {
+  momentGroup: MomentGroup!
+}
+
+input GetMomentTradeInRequestInput {
+  id: String!
+}
+
+type GetMomentTradeInRequestResponse {
+  tradeInRequest: MomentTradeInRequest
+}
+
+input GetMomentTransferRequestInput {
+  ID: String!
+}
+
+type GetMomentTransferRequestResponse {
+  data: MomentTransferRequest
+}
+
+input GetMomentsTradeInRequestInput {
+  id: String!
+}
+
+type GetMomentsTradeInRequestResponse {
+  tradeInRequest: MomentsTradeInRequest
+}
+
+type GetMomentsWithHighestBurnedTopshotScoreResponse {
+  moments: [UserBurnedMoment]
+}
+
+type GetMyActiveChallengesResponse {
+  challenges: [UserChallenge!]
+}
+
+type GetMyCompletedChallengesResponse {
+  completedUserChallenges: [CompletedUserChallenge!]
+}
+
+type GetMyProfileResponse {
+  publicInfo: UserPublicInfo!
+
+  email: String!
+
+  segmentId: String
+
+  moments: [MintedMoment]! @deprecated(reason: "use SearchMintedMoments filter byOwnerDapperID")
+
+  momentCount: Int!
+
+  referredByUserID: String
+
+  tradeTicketCount: Int
+
+  marketingCampaign: String
+}
+
+type GetMyReferralResponse {
+  referredByUser: User
+
+  firstPurchase: FirstPurchaseReferral
+}
+
+type GetMyShowcasesResponse {
+  showcases: [Showcase!]
+}
+
+input GetOfferInput {
+  """
+  id is an optional input field to retrieve specific offer by offer id.
+  """
+  id: Int
+
+  """
+  offerAvailableTxHash is an optional input field to retrieve specific offer by offer available TxHash.
+  """
+  offerAvailableTxHash: String
+
+  """
+  offerCompletedTxHash is an optional input field to retrieve specific offer by offer completed TxHash.
+  """
+  offerCompletedTxHash: String
+}
+
+input GetOnChainPackInput {
+  packID: String!
+}
+
+type GetOnChainPackResponse {
+  onChainPack: OnChainPack!
+}
+
+type GetOrderResponse {
+  order: Order
+}
+
+input GetPackListingEligibilityV2Input {
+  packListingId: ID!
+}
+
+type GetPackListingEligibilityV2Response {
+  packListingId: ID!
+
+  listingEligibility: ListingEligibility
+
+  levelEligibility: [LevelEligibility]
+}
+
+input GetPackListingInput {
+  packListingId: ID!
+}
+
+type GetPackListingResponse {
+  data: PackListing
+}
+
+input GetPackSummaryBallerStatusInput {
+  userID: ID!
+}
+
+"""
+Optional withPacks input specifies that this call should provide
+progress which includes the contents of the passed Packs.
+"""
+input GetPackSummaryProgressInput {
+  userID: ID!
+
+  withPacks: [ID!]
+}
+
+type GetPackSummaryProgressResponse {
+  """
+  Returns progress towards all active challenges
+  """
+  challengesProgress: ChallengesProgress
+
+  """
+  Returns progress towards all existing sets
+  """
+  setsProgress: SetsProgress
+}
+
+input GetPacklistingEligibilityDetailsInput {
+  packListingId: ID!
+}
+
+input GetPacksInput {
+  packIDs: [String!]!
+}
+
+type GetPacksResponse {
+  packs: Packs
+}
+
+input GetPinnedMomentsRequest {
+  dapperID: String!
+}
+
+type GetPinnedMomentsResponse {
+  moments: [MintedMoment]
+}
+
+input GetPlayInput {
+  playID: ID!
+}
+
+type GetPlayResponse {
+  play: Play
+}
+
+input GetPlayerDataWithCurrentStatsInput {
+  nbaPlayerID: ID!
+}
+
+type GetPlayerDataWithCurrentStatsResponse {
+  playerData: PlayerData
+
+  playerSeasonAverageScores: StatsPlayerSeasonAverageScores
+}
+
+input GetSetInput {
+  setID: ID!
+}
+
+type GetSetResponse {
+  set: Set
+}
+
+type GetSoftCurrencyPriceResponse {
+  price: Int!
+}
+
+type GetSpecialNFTResponse {
+  nft: SpecialNFT!
+}
+
+type GetSpecialNFTsResponse {
+  nfts: [SpecialNFT]
+}
+
+input GetTagsInput {
+  byTagLevel: [TagLevel]
+}
+
+type GetTagsResponse {
+  tags: [Tag]
+}
+
+type GetTeamSeriesCompletionProgressResponse {
+  seriesProgress: [TeamSeriesCompletionProgress!]!
+
+  contemporaryProgress: TeamCompletionProgress!
+
+  allProgress: TeamCompletionProgress!
+}
+
+type GetTickerDataResponse {
+  uniquePurchaseCount: Int!
+
+  uniqueBuyerCount: Int!
+
+  totalVolume: Price!
+
+  biggestSales: [SaleDto]!
+
+  mostPurchasedPlayer: String
+}
+
+type GetTitlesResponse {
+  titles: [Title]!
+}
+
+type GetTopNBurnedEditionsResponse {
+  editions: [BurnedEdition]
+}
+
+input GetTopshotScoreAllTeamsSeriesCompletionProgressRequest {
+  dapperID: ID!
+}
+
+type GetTopshotScoreAllTeamsSeriesCompletionProgressResponse {
+  teamSeriesCompletionProgress: [TeamSeriesCompletionProgressBucket]!
+}
+
+input GetTopshotScoreRequest {
+  dapperID: ID!
+
+  filters: TopshotScoreFilters
+
+  bonusGroups: [TopshotScoreRequestBonusGroup!]
+}
+
+input GetTopshotScoreTeamSeriesCompletionRequest {
+  dapperID: ID!
+
+  teamID: ID!
+}
+
+type GetTotalBurnedMomentCountByRarityResponse {
+  counts: [TotalBurnedMomentCountByRarity]
+}
+
+type GetTotalBurnedMomentCountResponse {
+  count: Int!
+}
+
+type GetTotalBurnedMomentsResponse {
+  """
+  The total number of burned moments.
+  """
+  totalBurnedMoments: Int!
+}
+
+input GetTransferEligibilityInput {
+  momentFlowID: String!
+}
+
+type GetTransferEligibilityResponse {
+  accountFirstPurchaseAge: NumericTransferRequirement!
+
+  accountMomentCount: NumericTransferRequirement!
+
+  momentAge: NumericTransferRequirement!
+}
+
+input GetUserBallerStatusRequest {
+  dapperID: String!
+}
+
+input GetUserCodexInput {
+  userID: ID!
+}
+
+type GetUserCodexResponse {
+  codex: [CodexSet]
+
+  totalUserOwnedMoments: Int
+}
+
+type GetUserCoolDownsResponse {
+  p2pPurchaseRemainingSeconds: Int
+
+  p2pListingRemainingSeconds: Int
+
+  p2pDelistingRemainingSeconds: Int
+}
+
+input GetUserEligibilityForJoiningPackListingQueueInput {
+  dapperID: ID!
+
+  packListingID: ID!
+}
+
+type GetUserEligibilityForJoiningPackListingQueueResponse {
+  isEligibleToJoin: Boolean!
+
+  ineligibilityReason: String
+}
+
+input GetUserMomentListingsInput {
+  setID: ID!
+
+  playID: ID!
+}
+
+type GetUserOrdersResponse {
+  orders: Orders
+}
+
+input GetUserOwnedSpecialNFTsInput {
+  flowAddress: String!
+
+  type: SpecialNFTType
+}
+
+type GetUserOwnedSpecialNFTsResponse {
+  nfts: [SpecialNFT]
+}
+
+input GetUserP2PListingOrderInput {
+  orderID: String!
+}
+
+type GetUserP2PListingOrderResponse {
+  data: P2PListingOrder
+}
+
+type GetUserP2PListingOrdersResponse {
+  data: P2PListingOrders
+}
+
+input GetUserP2PPurchaseOrderInput {
+  orderID: String!
+}
+
+type GetUserP2PPurchaseOrderResponse {
+  data: P2PPurchaseOrder
+}
+
+type GetUserP2PPurchaseOrdersResponse {
+  data: P2PPurchaseOrders
+}
+
+input GetUserPackOrderByDapperIdInput {
+  orderId: String!
+
+  dapperId: String!
+}
+
+input GetUserPackOrderInput {
+  orderId: String!
+}
+
+type GetUserPackOrderResponse {
+  data: PackPurchaseOrder
+}
+
+type GetUserPackOrdersResponse {
+  data: PackPurchaseOrders
+}
+
+type GetUserPendingTxStatesResponse {
+  hasPendingPackOpenRequests: Boolean!
+}
+
+input GetUserProfileInput {
+  dapperID: ID
+
+  flowAddress: String
+}
+
+type GetUserProfileResponse {
+  publicInfo: UserPublicInfo!
+
+  moments: [MintedMoment]! @deprecated(reason: "use SearchMintedMoments filter byOwnerDapperID")
+
+  momentCount: Int!
+}
+
+type GetUserPurchaseStatsResponse {
+  packsPurchased: Int!
+
+  starterPacksPurchased: Int!
+
+  boosterPacksPurchased: Int!
+
+  momentsPurchased: Int!
+}
+
+type GetUserScoresForAllStarsBurningLeaderboardResponse {
+  users: [UserBurnedTopshotScore]
+}
+
+type GetUserScoresForRisingStarsLockingLeaderboardResponse {
+  users: [UserBurnedTopshotScore]
+}
+
+type GetUserSettingsResponse {
+  userSettings: UserSettings
+}
+
+input GetUserShowcasesInput {
+  userID: ID!
+}
+
+type GetUserShowcasesResponse {
+  showcases: [Showcase!]
+}
+
+input GetUserStatsByLocationInput {
+  country: String
+
+  city: String
+}
+
+type GetUserStatsByLocationResponse {
+  data: [Location!]!
+}
+
+input GetUserTitlesRequest {
+  dapperID: ID
+
+  titleID: ID
+
+  categoryID: ID
+
+  limit: Int
+
+  isSelected: Boolean
+
+  isUnseen: Boolean
+}
+
+type GetUserTitlesResponse {
+  userTitles: [UserTitle]!
+}
+
+input GetUserTopshotTagsRequest {
+  dapperID: String!
+}
+
+type GetUserTopshotTagsResponse {
+  tags: [UserTopshotTag!]
+}
+
+type GetUsersWatchlistsResponse {
+  size: Int
+
+  data: [Watchlist]!
+}
+
+type GetUsersWithHighestBurnedTopshotScoreResponse {
+  users: [UserBurnedTopshotScore]
+}
+
+type GetUsersWithHighestNumberOfBurnedMomentsResponse {
+  users: [UserBurnedMomentStats]
+}
+
+input GetVendorMomentListingInput {
+  setID: ID!
+
+  playID: ID!
+}
+
+type GetVendorMomentListingResponse {
+  data: VendorMomentListing
+}
+
+input GiftPack {
+  momentFlowIDs: [String!]!
+}
+
+type GiglabsAdditionalMetadata {
+  image: String
+
+  preview: String
+
+  creatorName: String
+
+  externalUrl: String
+
+  ipfsImageHash: String
+
+  sha256ImageHash: String
+
+  ipfsMetadataHashes: [String]
+
+  teamId: String
+}
+
+type GiglabsBadge {
+  id: Int
+
+  name: String
+
+  assetUri: String
+
+  badgeToListingAssignment: GiglabsBadgeToListingAssignment
+}
+
+type GiglabsBadgeToListingAssignment {
+  index: Int
+
+  createdDate: String
+
+  updatedDate: String
+
+  listingId: Int
+
+  badgeId: Int
+}
+
+type GiglabsBid {
+  id: Int
+
+  walletID: String
+
+  price: Float
+
+  createdDate: String
+
+  listingID: Int
+}
+
+input GiglabsListingBidsInput {
+  id: Int!
+
+  limit: Int
+}
+
+type GiglabsListingBidsResponse {
+  bids: [GiglabsBid]
+}
+
+enum GiglabsListingType {
+  LIMITED
+
+  OPEN
+
+  AUCTION
+}
+
+type GiglabsMarketPlaceListingResponse {
+  id: Int
+
+  uuid: String
+
+  orgID: Int
+
+  seriesID: Int
+
+  setName: String
+
+  setIndex: Int
+
+  listingType: String
+
+  status: String
+
+  active: Boolean
+
+  featured: Boolean
+
+  banner: Boolean
+
+  description: String
+
+  tags: String
+
+  assetUri: String
+
+  assetPreviewUri: String
+
+  assetStorageUri: String
+
+  assetPreviewStorageUri: String
+
+  assetFileType: String
+
+  additionalImages: [String]
+
+  price: Float
+
+  reservePrice: Float
+
+  maxBid: Float
+
+  maxBidWalletID: String
+
+  nextBid: Float
+
+  mintQuantity: Int
+
+  hasUnlockableContent: Boolean
+
+  unlockableContentDesc: String
+
+  publishDate: String
+
+  saleStartDate: String
+
+  saleEndDate: String
+
+  requires: String
+
+  requiresOperator: String
+
+  modifiers: String
+
+  modifierType: String
+
+  modifierAmount: Int
+
+  shippingAddressRequired: Boolean
+
+  createdDate: String
+
+  updatedDate: String
+
+  purchaseLimit: Int
+
+  reserveMet: Boolean
+
+  additionalMetadata: GiglabsAdditionalMetadata
+
+  badges: [GiglabsBadge]
+}
+
+type GiglabsMarketPlaceListingsResponse {
+  records: [GiglabsMarketPlaceListingResponse]
+
+  count: Int
+}
+
+input GiglabsMarketplaceListingsInput {
+  listingType: GiglabsListingType!
+
+  seriesID: Int
+
+  limit: Int
+
+  offset: Int
+
+  search: String!
+
+  order: String
+}
+
+type GroupMomentOrder {
+  id: ID!
+
+  momentGroupID: String!
+
+  momentID: String!
+
+  order: Float!
+
+  createdAt: Time!
+
+  updatedAt: Time!
+}
+
+input HasBallerStatusProcessedPackFulfillmentsInput {
+  packIDs: [ID!]!
+}
+
+input HasUnreadActivitiesInput {
+  byActivityType: [ActivityType!]
+}
+
+type HasUnreadActivitiesResponse {
+  hasUnreadActivities: Boolean!
+}
+
+input HideOffersInput {
+  offerIDs: [Int!]
+}
+
+type HideOffersResponse {
+  success: Boolean!
+}
+
+"""
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as "4") or integer (such as 4) input value will be accepted as an ID.
+"""
+scalar ID
+
+type InsufficientMomentsError {
+  remainingMomentCount: Int!
+}
+
+"""
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+"""
+scalar Int
+
+type IntegerRangeFilter {
+  min: Int
+
+  max: Int
+}
+
+input IntegerRangeFilterInput {
+  min: Int
+
+  max: Int
+}
+
+enum JoinDropSquadError {
+  """
+  The drop squad is already at capacity
+  """
+  DROP_SQUAD_FULL
+
+  """
+  The current user is already associated with another squad for the same pack listing
+  """
+  ALREADY_ASSOCIATED
+
+  """
+  The drop squad does not exist
+  """
+  NOT_FOUND
+
+  """
+  The pack listing does not exist
+  """
+  INVALID_PACK_LISTING
+
+  """
+  Drop has already started. Users should not be able to join a squad.
+  """
+  DROP_STARTED
+}
+
+input JoinDropSquadInput {
+  dropSquadID: ID!
+
+  packListingID: ID!
+}
+
+type JoinDropSquadResponse {
+  dropSquadID: ID
+
+  error: JoinDropSquadError
+}
+
+type KYCCached {
+  kycStatus: KYCStatus!
+
+  kycType: KycType!
+
+  updatedAt: Time!
+}
+
+enum KYCStatus {
+  NOT_INITIATED
+
+  INITIATED
+
+  UNSUCCESSFUL_ATTEMPT
+
+  FAILED
+
+  SUCCESS
+}
+
+enum KycType {
+  FULL
+
+  LIGHT
+}
+
+interface Leaderboard {
+  id: String!
+
+  kind: LeaderboardKind!
+
+  entries: [LeaderboardEntry]!
+}
+
+interface LeaderboardEntry {
+  score: Int!
+
+  rank: Int!
+}
+
+type LeaderboardEntryRelationship {
+  leaderboardID: String!
+
+  score: Int!
+
+  rank: Int!
+
+  entryCount: Int!
+}
+
+enum LeaderboardKind {
+  PLAYER
+
+  TEAM
+}
+
+type LeaderboardPotential {
+  kind: LeaderboardKind!
+
+  id: String!
+
+  scoreAdded: Int!
+
+  scoreAddedFromBonus: Int!
+
+  scoreTotal: Int!
+
+  rank: Int!
+
+  totalUsers: Int!
+}
+
+enum LeaderboardSortType {
+  SCORE_ASC
+
+  SCORE_DESC
+}
+
+type LeaderboardUser implements LeaderboardEntry {
+  flowAddress: String!
+
+  score: Int!
+
+  rank: Int!
+
+  username: String!
+
+  profileImageURL: String!
+}
+
+enum League {
+  NBA
+
+  WNBA
+}
+
+enum LeaveDropSquadError {
+  """
+  The drop squad or member does not exist
+  """
+  NOT_FOUND
+}
+
+input LeaveDropSquadInput {
+  dropSquadID: ID!
+}
+
+type LeaveDropSquadResponse {
+  error: LeaveDropSquadError
+}
+
+type Level {
+  id: String!
+
+  name: String
+
+  waitingRoom: WaitingRoom
+
+  requirements: [Requirement]
+
+  bonuses: [Bonus]
+
+  maxOrderQuantity: MaxOrderQuantityV2
+}
+
+type LevelEligibility {
+  isEligible: Boolean!
+
+  levelName: String
+
+  levelID: String!
+
+  requirements: [Requirement]
+
+  maxOrderQuantity: Int!
+}
+
+type ListingEligibility {
+  isEligible: Boolean!
+
+  requirements: [Requirement]
+}
+
+type Location {
+  country: String!
+
+  city: String
+
+  collectorsCount: Int!
+
+  totalMomentsOwned: Int!
+
+  totalTopshotScore: Int!
+}
+
+enum LockStatusFilter {
+  LOCKED
+
+  NOT_LOCKED
+}
+
+scalar Map
+
+input MarkActivitiesAsReadInput {
+  activityIDs: [ID!]!
+}
+
+type MarkActivitiesAsReadResponse {
+  ok: Boolean
+}
+
+input MarkAllActivitiesAsReadInput {
+  activitiesBefore: Time!
+}
+
+type MarkAllActivitiesAsReadResponse {
+  ok: Boolean
+}
+
+type MarkAllUserTitlesAsSeenResponse {
+  ok: Boolean!
+}
+
+type MarketplaceTransaction implements Sortable & Syncable {
+  id: ID!
+
+  version: Version!
+
+  sortID: SortID!
+
+  seller: UserPublicInfo!
+
+  buyer: UserPublicInfo!
+
+  price: Price!
+
+  moment: MintedMoment!
+
+  txHash: String!
+
+  updatedAt: Time!
+}
+
+type MarketplaceTransactionEditionStats {
+  totalSales: Int
+
+  mostRecentEditionSale: MostRecentEditionSale
+
+  averageSalePrice: Price
+
+  averageSalePriceInSerialNumRange: Price
+
+  highestSalePrice: Price
+}
+
+type MarketplaceTransactionFilters {
+  byEditions: [EditionsFilter]
+
+  byMoments: [ID!]
+
+  byTeams: [ID!]
+
+  byPrice: PriceRangeFilter
+}
+
+input MarketplaceTransactionFiltersInput {
+  byEditions: [EditionsFilterInput]
+
+  byMoments: [ID!]
+
+  byTeams: [ID!]
+
+  byPrice: PriceRangeFilterInput
+
+  byParallels: [Int!]
+}
+
+type MarketplaceTransactionSearchSummary {
+  filters: MarketplaceTransactionFilters
+
+  sortBy: MarketplaceTransactionSortType
+
+  searchSummary: SearchSummary
+}
+
+type MarketplaceTransactionSearchSummaryResponse {
+  data: MarketplaceTransactionSearchSummary
+}
+
+enum MarketplaceTransactionSortType {
+  UPDATED_AT_ASC
+
+  UPDATED_AT_DESC
+
+  PRICE_ASC
+
+  PRICE_DESC
+}
+
+type MarketplaceTransactions implements SortableCollection {
+  size: Int
+
+  data: [MarketplaceTransaction!]!
+}
+
+enum MaxOrderQuantityFeature {
+  COLLECTOR_SCORE
+
+  TOPSHOT_SCORE
+}
+
+enum MaxOrderQuantityOperator {
+  PICK
+}
+
+type MaxOrderQuantityV2 {
+  operator: MaxOrderQuantityOperator!
+
+  expressions: [Expression!]
+}
+
+input MaxOrderQuantityV2Input {
+  operator: MaxOrderQuantityOperator!
+
+  expressions: [ExpressionInput!]
+}
+
+type Me {
+  dapperID: ID!
+
+  flowAddress: String
+
+  username: String
+
+  favoriteTeamID: String
+
+  country: String
+
+  city: String
+
+  shop: Shop!
+}
+
+type MintedMoment implements Sortable & Syncable {
+  id: ID!
+
+  version: Version
+
+  sortID: SortID
+
+  set: Set
+
+  play: Play
+
+  flowId: String
+
+  flowSerialNumber: String
+
+  price: Price
+
+  forSale: Boolean
+
+  listingOrderID: String
+
+  userListingID: String
+
+  owner: User @deprecated(reason: "use ownerV2 instead, which supports non-custodial users")
+
+  ownerV2: MomentOwner
+
+  assetPathPrefix: String
+
+  setPlay: MintedSetPlay
+
+  createdAt: Time
+
+  acquiredAt: Time
+
+  destroyedAt: Time
+
+  packListingID: String
+
+  tags: [Tag]
+
+  groupMomentOrder: GroupMomentOrder
+
+  momentGroups: [MomentGroup!]
+
+  topshotScore: MomentTopshotScore
+
+  lastPurchasePrice: Price
+
+  tier: MomentTier
+
+  lockExpiryAt: Time
+
+  isLocked: Boolean
+
+  parallelID: Int!
+
+  parallelSetPlay: MintedSetPlayParallel!
+}
+
+input MintedMomentFilterInput {
+  byOwnerDapperID: [String]
+
+  bySets: [ID]
+
+  bySeries: [ID]
+
+  byPlays: [ID]
+
+  byPlayers: [ID]
+
+  byTeams: [ID]
+
+  bySetVisuals: [VisualIdType]
+
+  byMomentTiers: [MomentTier]
+
+  byForSale: ForSaleFilter
+
+  byPlayTagIDs: [ID]
+
+  bySetPlayTagIDs: [ID]
+
+  byMomentTagIDs: [ID]
+
+  byPlayCategory: [ID]
+
+  byPrimaryPlayerPosition: [PlayerPosition]
+
+  byGameDate: DateRangeFilterInput
+
+  byCreatedAt: DateRangeFilterInput
+
+  byPlayerGameScores: PlayerGameScoresFiltersInput
+
+  byPrice: PriceRangeFilterInput
+
+  byActiveChallenge: [ID]
+
+  byLeagues: [League]
+
+  byOwnerFlowAddress: [String]
+
+  byEditions: [EditionsFilterInput]
+
+  byGroupID: ID
+
+  byGroupSlug: String
+
+  byPotentialTopshotScore: Boolean
+
+  byLockStatus: LockStatusFilter
+
+  byFlowID: [ID]
+
+  bySubeditionID: [Int!]
+}
+
+type MintedMomentFilters {
+  byOwnerDapperID: [String]
+
+  bySets: [ID]
+
+  bySeries: [ID]
+
+  byPlays: [ID]
+
+  byPlayers: [ID]
+
+  byTeams: [ID]
+
+  bySetVisuals: [VisualIdType]
+
+  byMomentTiers: [MomentTier]
+
+  byForSale: ForSaleFilter
+
+  byPlayTagIDs: [ID]
+
+  bySetPlayTagIDs: [ID]
+
+  byMomentTagIDs: [ID]
+
+  byPlayCategory: [ID]
+
+  byPrimaryPlayerPosition: [PlayerPosition]
+
+  byGameDate: DateRangeFilter
+
+  byCreatedAt: DateRangeFilter
+
+  byPlayerGameScores: PlayerGameScoresFilters
+
+  byPrice: PriceRangeFilter
+
+  byActiveChallenge: [ID]
+
+  byLeagues: [League]
+
+  byOwnerFlowAddress: [String]
+
+  byEditions: [EditionsFilter]
+
+  byGroupID: ID
+
+  byGroupSlug: String
+
+  byPotentialTopshotScore: Boolean
+
+  byLockStatus: LockStatusFilter
+
+  byFlowID: [ID]
+
+  bySubeditionID: [Int!]
+}
+
+type MintedMomentResponse {
+  data: MintedMoment
+}
+
+type MintedMomentSearchSummary {
+  filters: MintedMomentFilters
+
+  sortBy: MintedMomentSortType
+
+  searchSummary: SearchSummary
+}
+
+enum MintedMomentSortType {
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  ACQUIRED_AT_ASC
+
+  ACQUIRED_AT_DESC
+
+  RARITY_ASC
+
+  RARITY_DESC
+
+  PRICE_USD_ASC
+
+  PRICE_USD_DESC
+
+  PRICE_USD_ASC_NULLS_LAST
+
+  SERIAL_NUMBER_ASC
+
+  SERIAL_NUMBER_DESC
+
+  PLAYER_FIRST_NAME_ASC
+
+  PLAYER_FIRST_NAME_DESC
+
+  PLAYER_LAST_NAME_ASC
+
+  PLAYER_LAST_NAME_DESC
+
+  TOPSHOT_SCORE_ASC
+
+  TOPSHOT_SCORE_DESC
+
+  LAST_PURCHASE_PRICE_ASC
+
+  LAST_PURCHASE_PRICE_DESC
+
+  AVERAGE_SALE_PRICE_ASC
+
+  AVERAGE_SALE_PRICE_DESC
+}
+
+type MintedMoments implements SortableCollection {
+  size: Int
+
+  data: [MintedMoment!]!
+}
+
+type MintedSetPlay {
+  ID: ID!
+
+  setID: ID!
+
+  playID: ID!
+
+  flowRetired: Boolean!
+
+  circulationCount: Int @deprecated(reason: "use values in SetPlayCirculation ")
+
+  tags: [Tag]
+
+  circulations: SetPlayCirculations
+}
+
+type MintedSetPlayParallel {
+  setID: ID!
+
+  playID: ID!
+
+  parallelID: Int!
+
+  circulations: SetPlayCirculations
+
+  iconAssetURL: String
+}
+
+type MomentAgeError {
+  momentAgeMinutesLeft: Int!
+
+  momentAgeSecondsLeft: Int!
+}
+
+type MomentCountPerTeam {
+  teamID: String
+
+  momentCount: Int
+}
+
+type MomentFromPackCelebration {
+  assetUrlPortrait: String!
+
+  assetUrlLandscape: String!
+}
+
+type MomentFromPackCelebrations {
+  momentID: String!
+
+  celebrations: [MomentFromPackCelebration!]
+}
+
+type MomentGroup implements Sortable & Syncable {
+  sortID: SortID
+
+  version: Version
+
+  id: ID!
+
+  name: String!
+
+  slug: String!
+
+  order: Float!
+
+  MomentsTotal: Int!
+
+  Commons: Int!
+
+  Rares: Int!
+
+  Legendaries: Int!
+
+  Fandoms: Int!
+
+  createdAt: Time!
+
+  updatedAt: Time!
+
+  groupMomentOrders: [GroupMomentOrder!]
+}
+
+type MomentGroups implements SortableCollection {
+  size: Int
+
+  data: [MomentGroup!]!
+}
+
+type MomentListing implements Sortable & Syncable {
+  """
+  The listing id is the unique combination of editionID and listingType
+  """
+  id: ID!
+
+  version: Version!
+
+  sortID: SortID!
+
+  set: Set
+
+  play: Play
+
+  assetPathPrefix: String
+
+  """
+  The number of minted moments for this set/play.
+  """
+  circulationCount: Int @deprecated(reason: "use circulationCount field found inside mintedSetPlay instead")
+
+  """
+  flowRetired indicates whether the set/play has been retired
+  """
+  flowRetired: Boolean @deprecated(reason: "use flowRetired field found inside mintedSetPlay instead")
+
+  listingType: MomentListingType!
+
+  """
+  For user listings: The price range for all the moments available for sale for this set/play
+  For vendor listings: The price range min/max will be the same
+  """
+  priceRange: PriceRange!
+
+  """
+  Tags are not implemented
+  """
+  tags: [Tag]
+
+  """
+  Vendor listing field: whether the listing is available for sale
+  """
+  forSale: Boolean!
+
+  """
+  Vendor listing field: an admin input value, the previous price for sale display
+  """
+  vendorPreviousPrice: Price
+
+  """
+  Vendor listing field: the vendor moment listing id, used for direct purchase
+  """
+  vendorListingID: ID
+
+  """
+  Count of moments avalible for sale (listings)
+  """
+  momentListingCount: Int!
+
+  limit: Int!
+
+  """
+  TODO: delete once FE migrated the fixtures: https://github.com/dapperlabs/nba-api/pull/3768/files#r578669841
+  """
+  mintedSetPlay: MintedSetPlay @deprecated(reason: "renamed to setPlay for consistency, this field is left empty")
+
+  """
+  setPlay contains setPlay data including tags, circulation count and a retired flag
+  """
+  setPlay: MintedSetPlay
+
+  """
+  momentListings are the moments put up for sale by users for this edition
+  """
+  momentListings: [UserMomentListing!] @deprecated(reason: "use getUserMomentListings or MomentListingCount")
+
+  watchedCount: Int!
+
+  isWatched: Boolean!
+}
+
+input MomentListingFilterInput {
+  bySets: [ID]
+
+  byPlayers: [ID]
+
+  byTeams: [ID]
+
+  byPrimaryPlayerPosition: [PlayerPosition]
+
+  byPrice: PriceRangeFilterInput
+
+  bySerialNumber: IntegerRangeFilterInput
+
+  byPower: IntegerRangeFilterInput
+
+  byGameDate: DateRangeFilterInput
+
+  byCreatedAt: DateRangeFilterInput
+
+  byPlayerGameScores: PlayerGameScoresFiltersInput
+
+  byListingType: [MomentListingType]
+
+  bySetVisuals: [VisualIdType]
+
+  byMomentTiers: [MomentTier]
+
+  byPlayIDs: [ID]
+
+  bySeries: [ID]
+
+  byPlayTagIDs: [ID]
+
+  bySetPlayTagIDs: [ID]
+
+  byPlayCategory: [ID]
+
+  """
+  Tags are not implemented.
+  """
+  byTagNames: [String]
+
+  byParallelIDs: [Int]
+}
+
+type MomentListingFilters {
+  bySets: [ID]
+
+  byPlayers: [ID]
+
+  byTeams: [ID]
+
+  byPrimaryPlayerPosition: [PlayerPosition]
+
+  byPrice: PriceRangeFilter
+
+  bySerialNumber: IntegerRangeFilter
+
+  byPower: IntegerRangeFilter
+
+  byGameDate: DateRangeFilter
+
+  byCreatedAt: DateRangeFilter
+
+  byPlayerGameScores: PlayerGameScoresFilters
+
+  byListingType: [MomentListingType]
+
+  byTagNames: [String] @deprecated(reason: "will be deleted in favour of TagIDs fields")
+
+  byPlayTagIDs: [ID]
+
+  bySetPlayTagIDs: [ID]
+
+  bySetVisuals: [VisualIdType]
+
+  byMomentTiers: [MomentTier]
+
+  byPlayIDs: [ID]
+
+  bySeries: [ID]
+
+  byPlayCategory: [ID]
+}
+
+enum MomentListingSortType {
+  PRICE_USD_ASC
+
+  PRICE_USD_DESC
+
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  UPDATED_AT_ASC
+
+  UPDATED_AT_DESC
+
+  GAME_DATE_ASC
+
+  GAME_DATE_DESC
+
+  SERIAL_NUMBER_ASC
+
+  SERIAL_NUMBER_DESC
+
+  MOST_WATCHED_ASC
+
+  MOST_WATCHED_DESC
+}
+
+enum MomentListingType {
+  BY_VENDOR
+
+  BY_USERS
+}
+
+type MomentListings implements SortableCollection {
+  size: Int
+
+  data: [MomentListing!]!
+}
+
+type MomentListingsSearchSummary {
+  filters: MomentListingFilters
+
+  sortBy: MomentListingSortType
+
+  searchSummary: SearchSummary
+}
+
+type MomentListingsSearchSummaryResponse {
+  data: MomentListingsSearchSummary
+}
+
+type MomentMediaURIResponse {
+  path: String!
+}
+
+input MomentMetaInput {
+  momentTitle: String!
+
+  momentDescription: String
+
+  momentImageURL: String!
+}
+
+union MomentOwner = User|NonCustodialUser
+
+type MomentSaleCSImpactData {
+  ownedTeamEditionsCount: Int
+
+  totalTeamEditionsCount: Int
+
+  willLoseChallengeReward: Boolean
+}
+
+enum MomentTier {
+  MOMENT_TIER_NIL
+
+  MOMENT_TIER_COMMON
+
+  MOMENT_TIER_RARE
+
+  MOMENT_TIER_LEGENDARY
+
+  MOMENT_TIER_ULTIMATE
+
+  MOMENT_TIER_FANDOM
+
+  MOMENT_TIER_ANTHOLOGY
+}
+
+type MomentTopshotScore {
+  score: Int!
+
+  derivedVia: String!
+
+  calculatedAt: Time!
+
+  averageSalePrice: Price
+
+  purchasePrice: Price
+}
+
+type MomentTradeInRequest {
+  id: ID!
+
+  senderDapperID: String
+
+  status: MomentTradeInRequestStatus
+
+  state: MomentTradeInRequestState
+
+  momentID: String
+
+  version: Int!
+
+  invocationIntentID: String
+
+  redirectURL: String
+
+  momentImage: String
+
+  momentTitle: String
+
+  createdAt: Time
+
+  updatedAt: Time
+
+  moment: MintedMoment
+
+  txHash: String
+}
+
+type MomentTradeInRequestActivity {
+  tradeIn: MomentTradeInRequest
+}
+
+enum MomentTradeInRequestState {
+  CREATED
+
+  INVOCATION_INTENT_CREATED
+
+  INVOCATION_SUBMITTED
+
+  SUCCEEDED
+
+  FAILED
+}
+
+enum MomentTradeInRequestStatus {
+  PROCESSING
+
+  FAILED
+
+  SUCCEEDED
+}
+
+type MomentTransferReceivedActivity {
+  transfer: MomentTransferRequest
+}
+
+type MomentTransferRequest {
+  id: ID!
+
+  senderDapperID: String
+
+  receiverDapperID: String
+
+  status: MomentTransferRequestStatus
+
+  state: MomentTransferRequestState
+
+  momentID: String
+
+  version: Int!
+
+  invocationIntentID: String
+
+  redirectURL: String
+
+  momentImage: String
+
+  momentTitle: String
+
+  createdAt: Time
+
+  updatedAt: Time
+
+  moment: MintedMoment
+
+  txHash: String
+}
+
+type MomentTransferRequestActivity {
+  transfer: MomentTransferRequest
+}
+
+enum MomentTransferRequestState {
+  CREATED
+
+  REQUEST_VALIDATED
+
+  INVOCATION_INTENT_CREATED
+
+  INVOCATION_SUBMITTED
+
+  SUCCEEDED
+
+  REQUEST_VALIDATION_FAILED
+
+  FAILED
+}
+
+enum MomentTransferRequestStatus {
+  PROCESSING
+
+  FAILED
+
+  SUCCEEDED
+}
+
+enum MomentTransferValidationResults {
+  VALIDATION_RESULTS_OK
+
+  VALIDATION_RESULTS_ERROR
+
+  VALIDATION_RESULTS_MOMENT_LOCKED
+
+  VALIDATION_RESULTS_ACCOUNT_AGE
+
+  VALIDATION_RESULTS_INSUFFICIENT_MOMENTS
+}
+
+type MomentUsageData {
+  momentID: ID!
+
+  challengeID: ID!
+
+  variableChallengeCategory: VariableChallengeCategory!
+
+  submissionID: ID!
+
+  userSubmissionStatus: VariableChallengeSubmissionStatus!
+
+  slotType: VariableChallengeSlotType
+}
+
+type MomentsFromPack {
+  packID: String!
+
+  momentIDs: [String!]
+
+  momentCelebrations: [MomentFromPackCelebrations!]
+}
+
+type MomentsTradeInRequest {
+  id: ID!
+
+  senderDapperID: String
+
+  status: MomentTradeInRequestStatus
+
+  state: MomentTradeInRequestState
+
+  momentIDs: [String!]
+
+  version: Int!
+
+  invocationIntentID: String
+
+  redirectURL: String
+
+  image: String
+
+  title: String
+
+  createdAt: Time
+
+  updatedAt: Time
+
+  moments: [MintedMoment!]
+
+  txHash: String
+}
+
+type MomentsTradeInRequestActivity {
+  tradeIn: MomentsTradeInRequest
+}
+
+type MostRecentEditionSale {
+  price: Price
+
+  serialNumber: Int
+}
+
+type Mutation {
+  NoOp: Boolean
+
+  setSelectedUserTitles(input: SetSelectedUserTitlesInput!): SetSelectedUserTitlesResponse
+
+  markAllUserTitlesAsSeen: MarkAllUserTitlesAsSeenResponse
+
+  markActivitiesAsRead(input: MarkActivitiesAsReadInput!): MarkActivitiesAsReadResponse
+
+  markAllActivitiesAsRead(input: MarkAllActivitiesAsReadInput!): MarkAllActivitiesAsReadResponse
+
+  createWatchlist(input: CreateWatchlistInput!): WatchlistResponse
+
+  updateWatchlist(input: UpdateWatchlistInput!): WatchlistResponse
+
+  deleteWatchlist(input: DeleteWatchlistInput!): DeleteWatchlistResponse
+
+  addEditionToWatchlist(input: AddEditionToWatchlistInput!): AddEditionToWatchlistResponse
+
+  removeEditionFromWatchlist(input: RemoveEditionFromWatchlistInput!): RemoveEditionFromWatchlistResponse
+
+  removeAllEditionsFromWatchlist(input: RemoveAllEditionsFromWatchlistInput!): RemoveAllEditionsFromWatchlistResponse
+
+  completeCampaignEvent(input: CompleteCampaignEventInput!): CompleteCampaignEventResponse
+
+  createVariableChallengeSubmission(input: CreateVariableChallengeSubmissionInput!): VariableChallengeSubmissionResponse!
+
+  updateVariableChallengeSubmission(input: UpdateVariableChallengeSubmissionInput!): VariableChallengeSubmissionResponse!
+
+  purchaseMomentWithSoftCurrency(input: PurchaseMomentWithSoftCurrencyInput!): PurchaseMomentWithSoftCurrencyResponse
+
+  purchaseAssetsWithDapperPayment(input: PurchaseAssetsWithDapperPaymentInput!): PurchaseAssetsWithDapperPaymentResponse
+
+  createMomentTransferRequest(input: CreateMomentTransferRequestInput!): CreateMomentTransferRequestResponse @deprecated(reason: "Use createMomentTransferRequestV2")
+
+  createMomentTransferRequestV2(input: CreateMomentTransferRequestInputV2!): CreateMomentTransferRequestResult
+
+  addMomentsToGroups(input: AddMomentsToGroupsInput!): AddMomentsToGroupsResponse!
+
+  removeMomentsFromGroup(input: RemoveMomentsFromGroupInput!): RemoveMomentsFromGroupResponse!
+
+  createMomentGroup(input: CreateMomentGroupInput!): CreateMomentGroupResponse!
+
+  duplicateMomentGroup(input: DuplicateMomentGroupInput!): DuplicateMomentGroupResponse!
+
+  updateMomentGroup(input: UpdateMomentGroupInput!): UpdateMomentGroupResponse!
+
+  deleteMomentGroup(input: DeleteMomentGroupInput!): DeleteMomentGroupResponse!
+
+  pinMoment(input: PinMomentInput!): PintMomentResponse!
+
+  unpinMoment(input: UnpinMomentInput!): UnpinMomentResponse!
+
+  """
+  hideOffers will hide multiple offers by given offer ids.
+  """
+  hideOffers(input: HideOffersInput!): HideOffersResponse!
+
+  """
+  unhideOffers will hide multiple offers by given offer ids.
+  """
+  unhideOffers(input: UnhideOffersInput!): UnhideOffersResponse!
+
+  """
+  populateOfferByTransaction will search for offer by given transaction id on chain and will populate it in search
+  """
+  populateOfferByTransaction(input: PopulateOfferByTransactionInput!): PopulateOfferByTransactionResponse!
+
+  createMomentSale(input: CreateMomentSaleInput!): CreateMomentSaleResponse
+
+  cancelMomentSale(input: CancelMomentSaleInput!): CancelMomentSaleResponse
+
+  purchaseP2PMoment(input: PurchaseP2PMomentInput!): PurchaseP2PMomentResponse
+
+  reservePack(input: ReservePackInput!): ReservePackResponse
+
+  cancelReservation(input: CancelReservationInput!): CancelReservationResponse
+
+  transferPacks(input: TransferPacksInput!): TransferPacksResponse
+
+  purchasePack(input: PurchasePackInput!): PurchasePackResponse
+
+  createPackPurchaseIntent(input: CreatePackPurchaseIntentInput!): CreatePackPurchaseIntentResponse
+
+  confirmPackPurchase(input: ConfirmPackPurchaseInput!): ConfirmPackPurchaseResponse
+
+  cancelPurchasePack(input: CancelPurchasePackInput!): CancelPurchasePackResponse
+
+  openPacks(input: OpenPacksInput!): OpenPacksResponse
+
+  openPacksV2(input: OpenPacksV2Input!): OpenPacksV2Response
+
+  packNFTHashes(input: PackNFTHashesInput!): PackNFTHashesResponse
+
+  createGiftPacks(input: CreateGiftPacksInput!): CreateGiftPacksResponse!
+
+  authorizePackNFTsMinting(input: AuthorizePackNFTsMintingInput!): AuthorizePackNFTsMintingResponse!
+
+  authorizeMarketplacePackPurchase(input: AuthorizeMarketplacePackPurchaseInput!): AuthorizeMarketplacePackPurchaseResponse!
+
+  createMarketplaceReservation(input: CreateMarketplaceReservationInput): CreateMarketplaceReservationResponse
+
+  purchaseVendorMoment(input: PurchaseVendorMomentInput!): PurchaseVendorMomentResponse
+
+  rsvpAuthorizeReservation(input: RsvpAuthorizeReservationInput!): RsvpAuthorizeReservationResponse!
+
+  saveShowcase(input: SaveShowcaseInput!): SaveShowcaseResponse
+
+  deleteShowcase(input: DeleteShowcaseInput!): DeleteShowcaseResponse
+
+  createDropSquad(input: CreateDropSquadInput!): CreateDropSquadResponse!
+
+  joinDropSquad(input: JoinDropSquadInput!): JoinDropSquadResponse!
+
+  removeFromDropSquad(input: RemoveFromDropSquadInput!): RemoveFromDropSquadResponse!
+
+  leaveDropSquad(input: LeaveDropSquadInput!): LeaveDropSquadResponse!
+
+  createMomentTradeInRequest(input: CreateMomentTradeInRequestInput!): CreateMomentTradeInRequestResponse
+
+  createBulkMomentTradeInRequest(input: CreateBulkMomentTradeInRequestInput!): CreateBulkMomentTradeInRequestResponse
+
+  submitVoteForPoll(input: SubmitVoteForPollInput!): SubmitVoteForPollResponse
+
+  addUserMarketingCampaign(input: AddUserMarketingCampaignRequest!): AddUserMarketingCampaignResponse!
+
+  updateNBAMarketing(input: UpdateNBAMarketingRequest!): UpdateNBAMarketingResponse!
+
+  addUserReferral(input: AddUserReferralRequest!): AddUserReferralResponse!
+
+  upsertUserProfile(input: UpsertUserProfileInput!): UpsertUserProfileResponse!
+
+  upsertUserProfileFromToken: UpsertUserProfileResponse!
+
+  patchUserPreferences(input: PatchUserPreferencesInput!): PatchUserPreferencesResponse!
+
+  UpdateUserSettings(input: UserSettingsUpdateInput!): UpdateUserSettingsResponse
+}
+
+union NftOwner = User|NonCustodialUser
+
+type NonCustodialUser {
+  flowAddress: String!
+}
+
+type NotificationSettings {
+  receiveEmails: Boolean!
+}
+
+input NotificationSettingsInput {
+  receiveEmails: Boolean!
+}
+
+type NumericTransferRequirement {
+  threshold: Int!
+
+  current: Int!
+
+  valid: Boolean!
+}
+
+type Offer implements Sortable {
+  id: Int!
+
+  sortID: SortID
+
+  createdByFlowAddress: String!
+
+  createdByDapperID: String!
+
+  acceptedByFlowAddress: String
+
+  acceptedByDapperID: String
+
+  momentID: String!
+
+  momentFlowID: Int!
+
+  price: Price
+
+  completed: Boolean!
+
+  purchased: Boolean!
+
+  createdAt: Time!
+
+  updatedAt: Time!
+
+  acceptedAt: Time
+
+  offerAvailableTxHash: String!
+
+  offerCompletedTxHash: String
+
+  moment: MintedMoment
+
+  createdByUser: User
+
+  version: OfferVersion
+
+  offerType: OfferType
+
+  edition: Edition
+
+  visibility: OfferVisibility
+
+  parallelID: Int!
+}
+
+type OfferAvailableActivity {
+  offer: Offer
+}
+
+type OfferCompletedActivity {
+  offer: Offer
+}
+
+enum OfferType {
+  NIL
+
+  Serial
+
+  Edition
+
+  Parallel
+}
+
+enum OfferVersion {
+  V1
+
+  V2
+}
+
+enum OfferVisibility {
+  VISIBLE
+
+  HIDDEN
+}
+
+enum OfferVisibilityFilter {
+  ALL
+
+  VISIBLE
+
+  HIDDEN
+}
+
+type Offers implements SortableCollection {
+  size: Int
+
+  data: [Offer!]!
+}
+
+type OnChainPack implements Sortable & Syncable {
+  id: ID!
+
+  state: OnChainPackState!
+
+  momentIds: [String!]!
+
+  sortID: SortID
+
+  version: Version!
+
+  createdAt: Time!
+
+  updatedAt: Time!
+}
+
+enum OnChainPackState {
+  NIL
+
+  REVEAL_PACK_SUCCEEDED
+}
+
+"""
+SEALED:    When an on-chain pack is at sealed status, moments of the pack have not been revealed on the blockchain
+REVEALED:  When an on-chain pack is at opened status, moments of the pack have been revealed, but on-chain transfer of the moments
+are not finished yet.
+OPENED:    When a pack is at opened status, it means all moments of the pack are transferred to the user's wallet on-chain.
+"""
+enum OnChainPackStatus {
+  SEALED
+
+  REVEALED
+
+  OPENED
+}
+
+input OpenPacksInput {
+  packIDs: [String!]!
+}
+
+type OpenPacksResponse {
+  success: Boolean!
+
+  ID: String!
+}
+
+input OpenPacksV2Input {
+  packIDs: [String!]!
+}
+
+type OpenPacksV2Response {
+  momentsFromPacks: [MomentsFromPack!]
+}
+
+type Order {
+  id: ID!
+
+  status: OrderStatus!
+
+  state: OrderState!
+
+  momentListingID: ID!
+
+  playID: ID!
+
+  setID: ID!
+
+  userID: ID!
+
+  moment: MintedMoment
+
+  price: Price
+
+  createdAt: Time
+
+  updatedAt: Time
+
+  dapperIntentID: String
+}
+
+enum OrderState {
+  CREATED
+
+  PURCHASE_INTENT_CREATED
+
+  PROCESSING_RESERVATION
+
+  MOMENT_RESERVED
+
+  VALIDATING_MOMENT
+
+  MOMENT_VALIDATED
+
+  MOMENT_UNAVAILABLE
+
+  PAYMENT_FAILED
+
+  PAYMENT_SUCCEEDED
+
+  PROCESSING_MINTING
+
+  MINTING_SUCCEEDED
+
+  MINTING_FAILED
+
+  PROCESSING_TRANSFER
+
+  TRANSFER_SUCCEEDED
+
+  TRANSFER_FAILED
+
+  PROCESSING_PAYMENT
+}
+
+enum OrderStatus {
+  SUBMITTED
+
+  PROCESSING
+
+  FAILED
+
+  COMPLETED
+}
+
+type Orders {
+  size: Int
+
+  data: [Order!]!
+}
+
+type P2PListingOrder {
+  id: ID!
+
+  price: Price!
+
+  status: P2PListingOrderStatus!
+
+  state: P2PListingOrderState!
+
+  version: Int!
+
+  moment: MintedMoment
+
+  seller: User
+
+  createdAt: Time
+
+  updatedAt: Time
+
+  listingInvocationIntentID: String
+
+  delistingInvocationIntentID: String
+
+  listingTxHash: String
+
+  delistingTxHash: String
+}
+
+enum P2PListingOrderState {
+  NIL
+
+  CREATED
+
+  OWNERSHIP_VERIFIED
+
+  LISTING_INVOCATION_INTENT_CREATED
+
+  LISTING_INVOCATION_SUBMITTED
+
+  LISTING_SUCCEEDED
+
+  LISTING_CANCELLED
+
+  MOMENT_SOLD
+
+  DELISTING_REQUESTED
+
+  DELISTING_INVOCATION_INTENT_CREATED
+
+  DELISTING_INVOCATION_SUBMITTED
+
+  DELISTING_SUCCEEDED
+
+  DELISTING_FAILED
+
+  OWNERSHIP_VERIFICATION_FAILED
+
+  LISTING_FAILED
+}
+
+enum P2PListingOrderStatus {
+  NIL
+
+  PROCESSING
+
+  FAILED
+
+  LISTED
+
+  DELISTED
+
+  SOLD
+}
+
+type P2PListingOrders {
+  size: Int
+
+  data: [P2PListingOrder!]!
+}
+
+type P2PMomentListingActivity {
+  order: P2PListingOrder
+}
+
+type P2PMomentListingCancellationActivity {
+  order: P2PListingOrder
+}
+
+type P2PMomentListingSoldActivity {
+  order: P2PListingOrder
+}
+
+type P2PPurchaseOrder {
+  id: ID!
+
+  price: Price!
+
+  status: P2PPurchaseOrderStatus!
+
+  state: P2PPurchaseOrderState!
+
+  version: Int!
+
+  moment: MintedMoment
+
+  createdAt: Time
+
+  updatedAt: Time
+
+  purchaseIntentID: String
+
+  buyer: User
+
+  failureReason: P2PPurchaseOrderFailureReason
+
+  txHash: String
+}
+
+enum P2PPurchaseOrderFailureReason {
+  MOMENT_NO_LONGER_AVAILABLE
+}
+
+enum P2PPurchaseOrderState {
+  CREATED
+
+  USERS_VERIFIED
+
+  CREATE_INTENT_SUCCEEDED
+
+  PAYMENT_SUBMITTED
+
+  PAYMENT_SUCCEEDED
+
+  PURCHASE_SUCCEEDED
+
+  USER_VERIFICATION_FAILED
+
+  PAYMENT_FAILED
+
+  MOMENT_UNAVAILABLE
+
+  PURCHASE_FAILED
+}
+
+enum P2PPurchaseOrderStatus {
+  PROCESSING
+
+  FAILED
+
+  SUCCEEDED
+}
+
+type P2PPurchaseOrders {
+  size: Int
+
+  data: [P2PPurchaseOrder!]!
+}
+
+type Pack implements Sortable & Syncable {
+  id: ID!
+
+  state: PackState
+
+  status: PackStatus
+
+  """
+  momentIds are only available on opened packs
+  """
+  momentIds: [ID]
+
+  moments: [MintedMoment]
+
+  sortID: SortID
+
+  version: Version
+
+  createdAt: Time
+
+  updatedAt: Time
+
+  packListing: PackListing @deprecated(reason: "Use `packListingID` instead.")
+
+  packListingID: ID
+
+  fulfillmentTxHash: String
+
+  preorder: Boolean
+
+  locked: Boolean
+
+  flowID: String
+
+  distributionID: String
+
+  commitHash: String
+
+  onChainStatus: OnChainPackStatus
+
+  ownerDapperID: String
+
+  ownerFlowAddress: String
+}
+
+type PackEdition {
+  setID: ID!
+
+  playID: ID!
+
+  edition: Edition!
+
+  count: Int!
+
+  minSerialNumber: Int!
+
+  maxSerialNumber: Int!
+}
+
+type PackEditionConnection {
+  edges: [PackEditionEdge!]
+
+  pageInfo: PageInfo!
+}
+
+type PackEditionEdge {
+  cursor: String!
+
+  node: PackEdition
+}
+
+type PackFilters {
+  byOwnerDapperID: String
+}
+
+input PackFiltersInput {
+  byOwnerDapperID: String
+}
+
+type PackListing implements Sortable & Syncable {
+  id: ID!
+
+  remaining: Int
+
+  title: String
+
+  description: String
+
+  price: Price
+
+  priceV2: PriceV2
+
+  expiryDate: Time
+
+  forSale: Boolean
+
+  images: [PackListingImage]
+
+  sortID: SortID
+
+  version: Version
+
+  packListingTemplate: PackListingTemplate
+
+  totalPackCount: Int
+
+  """
+  visualId is the highest visualId of the sets in a packlisting template
+  """
+  visualId: VisualIdType
+
+  slug: String
+
+  startDate: Time
+
+  isStarterPack: Boolean
+
+  preorder: Boolean
+
+  """
+  The packlistingID to which the user gets redirected if this one sells out when they are next in line
+  """
+  reboundPackListingID: String
+
+  orderPurchaseCoolDownTimeInMinutes: Int
+
+  waitingRoom: String
+
+  waitingRoomActive: Boolean
+
+  momentCountPerTeam: [MomentCountPerTeam]
+
+  maxOrderQuantity: Int
+
+  maxOrderQuantityV2: MaxOrderQuantityV2
+
+  listingQuantity: Int
+
+  levels: [Level]
+
+  packEditions: [PackEdition]
+
+  packEditionsV2(first: Int, after: ID, orderBy: PackListingPackEditionOrdering): PackEditionConnection
+
+  appStoreProductID: String
+
+  """
+  momentsPerPack is the number of moments that a collector can pull per pack
+  """
+  momentsPerPack: Int
+
+  """
+  distributionID is the on-chain representation of the pack listing
+  """
+  distributionID: String
+
+  rsvpMetadata: RSVPMetadata
+
+  openingAssetURL: String!
+}
+
+enum PackListingExpiryStateFilter {
+  """
+  ACTIVE filters for pack listings that are both upcoming or on-going pack listings
+  """
+  ACTIVE
+
+  """
+  EXPIRED filters for pack listings that have expired and no longer purchaseable.
+  """
+  EXPIRED
+}
+
+type PackListingFilters {
+  isMobileSupported: Boolean
+}
+
+input PackListingFiltersInput {
+  """
+  isMobileSupported filters for pack listings that are associated with an appstore product
+  """
+  isMobileSupported: Boolean
+
+  """
+  byExpiryState filters for pack listings based on date conditions
+  """
+  byExpiryState: PackListingExpiryStateFilter
+}
+
+type PackListingImage {
+  type: PackListingImageType
+
+  url: String
+}
+
+enum PackListingImageType {
+  DEFAULT
+
+  BACKGROUND
+}
+
+input PackListingPackEditionOrdering {
+  sort: PackListingPackEditionSort!
+
+  direction: Direction!
+}
+
+enum PackListingPackEditionSort {
+  PLAYER_FIRST_NAME
+}
+
+type PackListingSlot {
+  set: Set
+
+  playIDCountMap: [PlayIDCountTuple]
+}
+
+enum PackListingSortType {
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+}
+
+type PackListingTemplate {
+  packListingSlots: [PackListingSlot]
+}
+
+type PackListings implements SortableCollection {
+  size: Int
+
+  data: [PackListing!]!
+}
+
+input PackListingsFilter {
+  """
+  Filters for pack listings associated with an app store product ID
+  """
+  isMobileSupported: Boolean
+
+  """
+  Filters for pack listings that fall in the expiry states
+  """
+  byExpiryState: PackListingExpiryStateFilter
+}
+
+type PackListingsSearchSummary {
+  filters: PackListingFilters
+
+  sortBy: PackListingSortType
+
+  searchSummary: SearchSummary
+}
+
+type PackNFTHashResponse {
+  packID: String!
+
+  distributionID: String!
+
+  commitHash: String!
+}
+
+input PackNFTHashesInput {
+  packIDs: [String!]!
+}
+
+type PackNFTHashesResponse {
+  packNFTHashes: [PackNFTHashResponse]!
+}
+
+enum PackOrderState {
+  NIL
+
+  CREATED
+
+  RESERVATION_SUCCEEDED
+
+  RESERVATION_FAILED
+
+  RESERVATION_TIMEOUT
+
+  CREATE_INTENT_SUCCEEDED
+
+  CREATE_INTENT_FAILED
+
+  PAYMENT_SUCCEEDED
+
+  PAYMENT_FAILED
+
+  CANCEL_RESERVATION_REQUESTED
+
+  RESERVATION_CANCELLED
+
+  PAYMENT_CANCELLATION_REQUESTED
+
+  PAYMENT_CANCELLATION_SUCCEEDED
+
+  INTENT_CANCELLATION_REQUESTED
+
+  INTENT_CANCELLATION_SUCCEEDED
+
+  INTENT_CANCELLATION_FAILED
+
+  INTENT_EXPIRED
+
+  """
+  fulfillment related states are deprecated. Fulfillments happen when packs are opened.
+  """
+  FULFILLMENT_SUCCEEDED
+
+  FULFILLMENT_FAILED
+
+  FULFILLMENT_REQUESTED
+
+  FULFILLMENT_TIMEOUT
+
+  FULFILLMENT_EXPIRED
+}
+
+enum PackOrderStatus {
+  NIL
+
+  SUBMITTED
+
+  PROCESSING
+
+  FAILED
+
+  COMPLETED
+}
+
+type PackPurchaseOrder {
+  id: ID!
+
+  price: Price!
+
+  status: PackOrderStatus!
+
+  state: PackOrderState!
+
+  paymentTxHash: String
+
+  packListing: PackListing
+
+  quantity: Int
+
+  """
+  The packs in the order will be revealed as soon as payment is successful.
+  There are a few scenarios:
+
+  1) Payment Succeeded:
+  Pack with momentIds returned and fulfillment is in processing.
+  The moments will NOT show up with searchMintedMoments query filter byOwnerDapperID.
+
+  PackOrderState : PAYMENT_SUCCEEDED
+  PackOrderStatus : PROCESSING
+
+  2) Fulfillment is Completed:
+  Pack with momentIds returned, order is completed.
+  The moments will eventually show up with searchMintedMoments query filter byOwnerDapperID.
+  Note: Moment ownership updates may still be happening when fulfillment is complete, so the moments will not be returned by searchMintedMoments query filter byOwnerDapperID right away.
+
+  PackOrderState : FULFILLMENT_SUCCEEDED
+  PackOrderStatus : COMPLETED
+
+  3) Fulfillment Failed:
+  Pack with moment_ids returned for failed fulfillment (failed moment transfer to user).
+  The moments will not show up with searchMintedMoments query filter byOwnerDapperID.
+
+  state : FULLFILLMENT_FAILED
+  status : FAILED
+  """
+  packs: [Pack]
+
+  dapperIntentId: String
+
+  createdAt: Time
+
+  updatedAt: Time
+}
+
+type PackPurchaseOrders {
+  size: Int
+
+  data: [PackPurchaseOrder!]!
+}
+
+enum PackPurchasePaymentFlow {
+  """
+  Represents a purchase that happens immediately followed by fulfillment
+  """
+  DIRECT_PURCHASE
+
+  """
+  Represents a purchase that has been authorized by the user to be charged at a later date
+  """
+  MANDATE
+}
+
+type PackReservation {
+  id: ID!
+
+  packListingID: ID!
+
+  levelID: String!
+
+  quantity: Int!
+
+  payment: PackReservationPayment!
+}
+
+input PackReservationFilter {
+  reservationID: ID
+
+  packListingID: ID
+}
+
+type PackReservationPayment {
+  status: PackReservationPaymentStatus!
+
+  confirmationRedirectURL: String!
+
+  price: PriceV2!
+}
+
+enum PackReservationPaymentStatus {
+  AWAITING_CONFIRMATION
+
+  APPROVED
+
+  CANCELLED
+
+  SUCCEEDED
+}
+
+input PackReservationsFilter {
+  packListingID: ID!
+}
+
+type PackSearchSummary {
+  searchSummary: SearchSummary
+}
+
+"""
+Key states:
+
+OPEN_PACK_SUCCEEDED:    It means this is ready to show moments to users, and moments fulfillment will start soon.
+OPEN_PACK_FAILED:       Open pack is initiated, but failed before fulfilling moments. It is not ready to show moments to users.
+FULFILL_PACK_REQUESTED: It means moments fulfillment started.
+on-chain.
+FULFILL_PACK_FAILED:    All moments or part of the moments fulfillment failed.
+FULFILL_PACK_SUCCEEDED: All moments are fulfilled successfully.
+
+Other states:
+
+FULFILL_PACK_TIMEOUT & FULFILL_PACK_EXPIRED: Since moment fulfillment consists of multiple on-chain transactions, these
+transactions are probably timeout or expired. But these two states are not used at the moment. Timeout on-chain
+transactions or expired transactions are treated as failed.
+"""
+enum PackState {
+  SEALED
+
+  OPEN_PACK_REQUESTED
+
+  OPEN_PACK_FAILED
+
+  OPEN_PACK_SUCCEEDED
+
+  FULFILL_PACK_REQUESTED
+
+  FULFILL_PACK_TIMEOUT
+
+  FULFILL_PACK_EXPIRED
+
+  FULFILL_PACK_FAILED
+
+  FULFILL_PACK_SUCCEEDED
+}
+
+"""
+SEALED:    When a pack is at sealed status, moments of the pack will not be revealed.
+OPENED:    When a pack is at opened status, moments of the pack will be returned, but on-chain transfer of the moments
+are not finished yet.
+FULFILLED: When a pack is at fulfilled status, it means all moments of the pack are transferred to the user's wallet
+on-chain.
+"""
+enum PackStatus {
+  SEALED
+
+  OPENED
+
+  FULFILLED
+}
+
+type Packs {
+  size: Int
+
+  data: [Pack!]!
+}
+
+input PacksFiltersInput {
+  byOwnerDapperID: String
+}
+
+type PacksForUserCollection implements Sortable & Syncable {
+  id: ID!
+
+  title: String
+
+  description: String
+
+  images: [PackListingImage]
+
+  sortID: SortID
+
+  version: Version
+
+  data: Packs
+
+  """
+  visualId is the highest visualId of the sets in a packlisting template
+  """
+  visualId: VisualIdType
+}
+
+type PacksForUserCollectionSearchSummary {
+  filters: PackFilters
+
+  searchSummary: SearchSummary
+}
+
+type PacksForUserCollectionSearchSummaryResponse {
+  data: PacksForUserCollectionSearchSummary
+}
+
+type PacksForUserCollections implements SortableCollection {
+  size: Int
+
+  data: [PacksForUserCollection!]!
+}
+
+type PageInfo {
+  startCursor: String
+
+  endCursor: String
+
+  hasNextPage: Boolean!
+}
+
+type Pagination {
+  leftCursor: Cursor
+
+  rightCursor: Cursor
+}
+
+input PaginationInput {
+  cursor: Cursor!
+
+  direction: CursorDirection!
+
+  limit: Int!
+}
+
+input PaginationInputV2 {
+  cursor: Cursor!
+
+  limit: Int!
+}
+
+input PatchUserPreferencesInput {
+  favoriteTeamID: String
+
+  country: String
+
+  city: String
+}
+
+type PatchUserPreferencesResponse {
+  success: Boolean! @deprecated(reason: "use publicInfo")
+
+  publicInfo: UserPublicInfo!
+}
+
+enum PaymentProvider {
+  DAPPER
+
+  IAP
+}
+
+input PinMomentInput {
+  momentID: String!
+}
+
+type PintMomentResponse {
+  success: Boolean!
+}
+
+type Play implements Sortable & Syncable {
+  id: ID!
+
+  version: Version
+
+  description: String
+
+  flowID: ID
+
+  sortID: SortID
+
+  status: PlayStatus
+
+  assets: PlayAssets
+
+  stats: PlayStats
+
+  statsPlayerGameScores: StatsPlayerGameScores
+
+  statsPlayerSeasonAverageScores: StatsPlayerSeasonAverageScores
+
+  tags: [Tag]
+
+  league: League
+
+  headline: String
+
+  headlineSource: headlineSourceType
+
+  shortDescription: String
+
+  keyStats: [String]
+}
+
+type PlayAssets {
+  videos: [PlayVideo]
+
+  images: [PlayImage]
+
+  videoLengthInMilliseconds: Int @deprecated(reason: "video length is now associated with PlayVideo")
+}
+
+type PlayFilter {
+  ByPlayers: [ID]
+}
+
+input PlayFilterInput {
+  byPlayers: [ID]
+}
+
+type PlayIDCountTuple {
+  id: String!
+
+  count: Int!
+}
+
+type PlayImage {
+  type: PlayImageType!
+
+  url: String!
+}
+
+enum PlayImageType {
+  PLAY_IMAGE_TYPE_NIL
+
+  PLAY_IMAGE_TYPE_PLAYER
+}
+
+type PlaySearchSummary {
+  sortBy: PlaySortType
+
+  filters: PlayFilter
+
+  searchSummary: SearchSummary
+}
+
+enum PlaySortType {
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  UPDATED_AT_ASC
+
+  UPDATED_AT_DESC
+
+  DATE_OF_MOMENT_ASC
+
+  DATE_OF_MOMENT_DESC
+}
+
+type PlayStats {
+  playerID: String
+
+  playerName: String
+
+  firstName: String
+
+  lastName: String
+
+  jerseyNumber: String
+
+  teamAtMoment: String
+
+  awayTeamName: String
+
+  awayTeamScore: Int
+
+  homeTeamName: String
+
+  homeTeamScore: Int
+
+  dateOfMoment: Time
+
+  totalYearsExperience: String
+
+  teamAtMomentNbaId: String
+
+  height: Int
+
+  weight: Int
+
+  currentTeam: String
+
+  currentTeamId: String
+
+  primaryPosition: PlayerPosition
+
+  homeTeamNbaId: String
+
+  awayTeamNbaId: String
+
+  nbaSeason: String
+
+  draftYear: Int
+
+  draftSelection: String
+
+  draftRound: String
+
+  birthplace: String
+
+  birthdate: Date
+
+  draftTeam: String
+
+  draftTeamNbaId: String
+
+  playCategory: String
+
+  playType: String
+
+  quarter: Quarter
+
+  homeTeamScoresByQuarter: TeamScoresByQuarter
+
+  awayTeamScoresByQuarter: TeamScoresByQuarter
+
+  overrideHeadline: String
+}
+
+enum PlayStatus {
+  RECEIVED
+
+  DRAFT
+
+  REVIEW
+
+  APPROVED
+
+  REJECTED
+
+  PUBLISHED
+}
+
+type PlayVideo {
+  type: PlayVideoType
+
+  url: URL
+
+  videoLength: Int
+}
+
+enum PlayVideoType {
+  PLAY_VIDEO_TYPE_VERTICAL
+
+  PLAY_VIDEO_TYPE_SQUARE
+}
+
+type Player {
+  id: ID!
+
+  name: String
+}
+
+type PlayerData {
+  jerseyNumber: String
+
+  position: String
+
+  height: Int
+
+  weight: Int
+
+  currentTeamName: String
+
+  currentTeamId: String
+
+  firstName: String
+
+  lastName: String
+
+  birthplace: String
+
+  birthdate: Date
+
+  yearsExperience: Int
+
+  teamsPlayedFor: [String]
+}
+
+type PlayerGameScoresFilters {
+  points: IntegerRangeFilter
+}
+
+input PlayerGameScoresFiltersInput {
+  points: IntegerRangeFilterInput!
+}
+
+type PlayerLeaderboard implements Leaderboard {
+  id: String!
+
+  kind: LeaderboardKind!
+
+  entries: [LeaderboardUser]!
+}
+
+enum PlayerPosition {
+  NA
+
+  C
+
+  CF
+
+  F
+
+  FC
+
+  FG
+
+  G
+
+  GF
+
+  PF
+
+  PG
+
+  SF
+
+  SG
+}
+
+type Players {
+  size: Int
+
+  data: [Player!]!
+}
+
+type Plays implements SortableCollection {
+  size: Int
+
+  data: [Play!]!
+}
+
+type Poll {
+  """
+  id is the unique identifier of the poll. This is auto-generated upon creation.
+  """
+  id: ID!
+
+  """
+  candidatePlays are the plays that can be voted on.
+  """
+  candidatePlays: [PollPlay!]!
+
+  """
+  startsAt is the timestamp that the poll will start at
+  """
+  startsAt: Time!
+
+  """
+  expiresAt is the timestamp that the poll will expire at
+  """
+  expiresAt: Time!
+
+  """
+  votedFor can only be populated for an authenticated request.
+  This returns the ID of the play that the user has voted for.
+  """
+  votedFor: String
+
+  """
+  headline is the name of the player or team - depends on moment type
+  """
+  headline: String!
+
+  """
+  The wave that the TS50 player belongs to
+  """
+  wave: Int!
+
+  """
+  imageURL is an optional image url for the given poll
+  """
+  imageURL: String
+}
+
+type PollPlay {
+  """
+  contentfulEntryID is the entry to the play in contentful.
+  This is a short-term solution as we won't have the play data in our backend
+  for this campaign.
+  """
+  contentfulEntryID: String
+
+  """
+  totalVotes is the total number of votes that the play has received
+  """
+  totalVotes: Int!
+}
+
+input PopulateOfferByTransactionInput {
+  """
+  transactionID is an input field to retrieve specific offer on chain by transaction.
+  """
+  transactionID: String!
+}
+
+type PopulateOfferByTransactionResponse {
+  Offer: Offer!
+}
+
+scalar Price
+
+type PriceRange {
+  min: Price!
+
+  max: Price!
+}
+
+type PriceRangeFilter {
+  min: Price
+
+  max: Price
+}
+
+input PriceRangeFilterInput {
+  min: Price
+
+  max: Price
+}
+
+type PriceV2 {
+  value: Price!
+
+  currency: Currency!
+}
+
+input PriceV2Input {
+  value: Price!
+
+  currency: Currency!
+}
+
+input PurchaseAssetsWithDapperPaymentInput {
+  orderToken: String!
+}
+
+type PurchaseAssetsWithDapperPaymentResponse {
+  assetID: ID!
+
+  price: Int!
+
+  purchaseType: PurchaseType!
+}
+
+input PurchaseMomentWithSoftCurrencyInput {
+  momentID: String!
+}
+
+type PurchaseMomentWithSoftCurrencyResponse {
+  momentID: String!
+}
+
+type PurchaseP2PMomentActivity {
+  order: P2PPurchaseOrder
+}
+
+input PurchaseP2PMomentInput {
+  momentID: String!
+
+  price: Price!
+
+  momentFlowID: String!
+
+  sellerID: String!
+
+  userListingID: String
+
+  redirectURL: String!
+
+  momentName: String
+
+  momentDescription: String
+
+  momentImageURL: String
+
+  momentMetaInput: MomentMetaInput
+
+  recaptchaToken: String
+}
+
+type PurchaseP2PMomentResponse {
+  orderID: String!
+}
+
+type PurchasePackActivity {
+  order: PackPurchaseOrder
+}
+
+input PurchasePackInput {
+  packListingID: String!
+
+  price: Price!
+
+  priceV2: PriceV2Input
+
+  quantity: Int!
+
+  redirectURL: String!
+
+  recaptchaToken: String
+
+  queueID: String
+}
+
+type PurchasePackResponse {
+  orderID: String!
+
+  existingReservation: Boolean
+
+  packsReserved: Int
+}
+
+input PurchaseSoftCurrencyWithDapperPaymentInput {
+  orderToken: String!
+}
+
+type PurchaseSoftCurrencyWithDapperPaymentResponse {
+  success: Boolean!
+}
+
+enum PurchaseType {
+  SOFT_CURRENCY_PURCHASE
+
+  BASIC_MOMENT_PURCHASE
+
+  NFT_MOMENT_PURCHASE
+}
+
+type PurchaseVendorMomentActivity {
+  order: Order
+}
+
+input PurchaseVendorMomentInput {
+  orderToken: String
+
+  purchaserID: String
+
+  paymentTransactionID: String
+
+  momentListingID: String!
+
+  redirectURL: String!
+
+  price: Price
+
+  momentTitle: String
+
+  momentImageURL: String
+}
+
+type PurchaseVendorMomentResponse {
+  orderID: ID!
+
+  paymentTransactionID: String @deprecated(reason: "no longer given")
+}
+
+enum Quarter {
+  NA
+
+  Q1
+
+  Q2
+
+  Q3
+
+  Q4
+
+  OT1
+
+  OT2
+
+  OT3
+
+  OT4
+
+  OT5
+
+  OT6
+
+  OT7
+
+  OT8
+
+  OT9
+
+  OT10
+}
+
+type QuarterScore {
+  type: String
+
+  number: Int
+
+  sequence: Int
+
+  points: Int
+}
+
+type Query {
+  NoOp: Boolean
+
+  GetActivity(activityID: ID!): GetActivityResponse
+
+  SearchActivity(input: SearchActivityInput!): SearchActivityResponse
+
+  GetUserPurchaseStats: GetUserPurchaseStatsResponse
+
+  HasUnreadActivities(input: HasUnreadActivitiesInput!): HasUnreadActivitiesResponse
+
+  activeCampaigns: [Campaign!]
+
+  getMyActiveChallenges: GetMyActiveChallengesResponse!
+
+  getMyCompletedChallenges: GetMyCompletedChallengesResponse!
+
+  getCollectorScore(input: [CollectorScoreRequestBonusGroup]): CollectorScore @deprecated(reason: "deprecated in favour of getCollectorScorePublic")
+
+  queryElasticsearch(input: QueryElasticsearchInput): QueryElasticsearchResponse
+
+  getKYCStatus(input: GetKYCStatusInput): GetKYCStatusResponse!
+
+  authenticate(input: AuthenticateInput!): AuthenticateResponse
+
+  requestLoginUrl(input: RequestLoginUrlInput!): RequestLoginUrlResponse
+
+  exchangeRefreshToken(input: ExchangeRefreshTokenInput!): ExchangeRefreshTokenResponse
+
+  revokeToken(input: RevokeTokenInput!): RevokeTokenResponse
+
+  me: Me
+
+  getMintedMomentProgressForQuest: GetMintedMomentProgressForQuestResponse
+
+  getMomentTransferRequest(input: GetMomentTransferRequestInput!): GetMomentTransferRequestResponse
+
+  getTransferEligibility(input: GetTransferEligibilityInput): GetTransferEligibilityResponse!
+
+  getGiftedMomentURL(input: GetGiftedMomentURLInput): GetGiftedMomentURLResponse!
+
+  searchMomentGroups(input: SearchMomentGroupsInput): SearchMomentGroupsResponse!
+
+  getMomentGroup(input: GetMomentGroupInput!): GetMomentGroupResponse!
+
+  """
+  This query returns total number of burned moments.
+  """
+  getTotalBurnedMoments: GetTotalBurnedMomentsResponse!
+
+  getPinnedMoments(input: GetPinnedMomentsRequest!): GetPinnedMomentsResponse!
+
+  getUserP2PListingOrder(input: GetUserP2PListingOrderInput): GetUserP2PListingOrderResponse
+
+  getUserP2PListingOrders: GetUserP2PListingOrdersResponse
+
+  getUserP2PPurchaseOrder(input: GetUserP2PPurchaseOrderInput): GetUserP2PPurchaseOrderResponse
+
+  getUserP2PPurchaseOrders: GetUserP2PPurchaseOrdersResponse
+
+  getMomentSaleCSImpactData(momentID: ID!): MomentSaleCSImpactData
+
+  getDropEligibility(input: GetDropEligibilityInput): GetDropEligibilityResponse @deprecated(reason: "use getPacklistingEligibilityDetails")
+
+  getPacklistingEligibilityDetails(input: GetPacklistingEligibilityDetailsInput): [StringTuple!]
+
+  GetPackListingEligibilityV2(input: GetPackListingEligibilityV2Input): GetPackListingEligibilityV2Response
+
+  getUserPackOrder(input: GetUserPackOrderInput): GetUserPackOrderResponse
+
+  getUserPackOrders: GetUserPackOrdersResponse
+
+  packReservation(filter: PackReservationFilter!): PackReservation
+
+  packReservations(filter: PackReservationsFilter!): [PackReservation]!
+
+  getGiftPackURL(input: GetGiftPackURLInput!): GetGiftPackURLResponse
+
+  """
+  Get on chain gift packs created by authenticated user
+  """
+  getGiftPacks(input: GetGiftPacksInput): GetGiftPacksResponse!
+
+  getOrder(orderID: ID!): GetOrderResponse
+
+  getUserOrders: GetUserOrdersResponse
+
+  rsvpReservation(filter: RsvpReservationFilter!): RsvpReservation
+
+  getMyShowcases: GetMyShowcasesResponse
+
+  getMomentTradeInRequest(input: GetMomentTradeInRequestInput!): GetMomentTradeInRequestResponse
+
+  getMomentsTradeInRequest(input: GetMomentsTradeInRequestInput!): GetMomentsTradeInRequestResponse
+
+  getMyReferral: GetMyReferralResponse
+
+  getMyProfile: GetMyProfileResponse!
+
+  getUserPendingTxStates: GetUserPendingTxStatesResponse!
+
+  getUserCoolDowns: GetUserCoolDownsResponse!
+
+  searchUsersByLocation(input: SearchUsersByLocationInput): SearchUsersResponse
+
+  GetUserSettings: GetUserSettingsResponse
+
+  getUserStatsByLocation(input: GetUserStatsByLocationInput): GetUserStatsByLocationResponse
+
+  getPlay(playID: GetPlayInput!): GetPlayResponse
+
+  """
+  Get a list of Titles.
+  """
+  getTitles: GetTitlesResponse
+
+  """
+  Get a users Titles.
+  """
+  getUserTitles(input: GetUserTitlesRequest!): GetUserTitlesResponse
+
+  SearchActivityByDapperId(dapperID: String!, input: SearchActivityInput!): SearchActivityResponse
+
+  getWatchlist(id: ID!): WatchlistResponse
+
+  getUsersWatchlists(dapperID: ID!): GetUsersWatchlistsResponse
+
+  searchWatchedEditions(input: SearchWatchedEditionsInput!): SearchWatchedEditionsResponse
+
+  getEditionsWatcherCount(input: GetEditionsWatcherCountInput!): GetEditionsWatcherCountResponse
+
+  getGiglabsMarketplaceListings(input: GiglabsMarketplaceListingsInput!): GiglabsMarketPlaceListingsResponse
+
+  getGiglabsMarketplaceListing(id: Int!): GiglabsMarketPlaceListingResponse
+
+  getGiglabsListingBids(input: GiglabsListingBidsInput!): GiglabsListingBidsResponse
+
+  """
+  Gets a users baller status.
+  """
+  getUserBallerStatus(input: GetUserBallerStatusRequest!): UserBallerStatus
+
+  """
+  Gets an ordered list of baller status levels.
+  """
+  getBallerStatusLevels: BallerStatusLevels
+
+  """
+  Check if a baller status has processed pack fulfillment's.
+  """
+  hasBallerStatusProcessedPackFulfillments(input: HasBallerStatusProcessedPackFulfillmentsInput!): Boolean
+
+  getUsersWithHighestNumberOfBurnedMoments: GetUsersWithHighestNumberOfBurnedMomentsResponse!
+
+  getUsersWithHighestBurnedTopshotScore: GetUsersWithHighestBurnedTopshotScoreResponse!
+
+  getMomentsWithHighestBurnedTopshotScore: GetMomentsWithHighestBurnedTopshotScoreResponse!
+
+  getTotalBurnedMomentCount: GetTotalBurnedMomentCountResponse!
+
+  getTotalBurnedMomentCountByRarity: GetTotalBurnedMomentCountByRarityResponse!
+
+  getTopNBurnedEditions: GetTopNBurnedEditionsResponse!
+
+  getUserScoreForRisingStarsLockingLeaderboard(dapperID: ID!): UserBurnedTopshotScore!
+
+  getUserScoresForRisingStarsLockingLeaderboard: GetUserScoresForRisingStarsLockingLeaderboardResponse!
+
+  getUserScoreForAllStarsBurningLeaderboard(dapperID: ID!): UserBurnedTopshotScore!
+
+  getUserScoresForAllStarsBurningLeaderboard: GetUserScoresForAllStarsBurningLeaderboardResponse!
+
+  """
+  Gets all active challenges.
+  """
+  getActiveChallenges: GetActiveChallengesResponse!
+
+  """
+  Searches challenges based on the given input.
+  SearchChallenges sorts by ExpirationDate DESC by default, filledMomentIds is currently null as we are not yet showing the progress of active challenges
+  """
+  searchChallenges(input: SearchChallengesInput!): SearchChallengesResponse
+
+  getChallengeByID(input: GetChallengeByIDInput!): UserChallenge!
+
+  checkActiveChallengeSubmissionsByMomentID(input: CheckActiveChallengeSubmissionsByMomentIDInput!): CheckActiveChallengeSubmissionsByMomentIDResponse!
+
+  getActiveUserSubmissionsByMomentIDs(input: GetActiveUserSubmissionsByMomentIDsInput!): GetActiveUserSubmissionsByMomentIDsResponse!
+
+  getUserCodex(input: GetUserCodexInput!): GetUserCodexResponse @deprecated(reason: "use getCodex instead (with optional userID)")
+
+  getCodex(input: GetCodexInput!): GetCodexResponse
+
+  getCodexSet(input: GetCodexSetInput!): GetCodexSetResponse
+
+  getCollectorScorePublic(input: GetCollectorScoreRequest!): CollectorScore
+
+  searchTeamCollection(input: SearchTeamCollectionInput!): SearchTeamCollectionResponse
+
+  """
+  Gets an Edition.
+  """
+  getEdition(input: GetEditionInput!): GetEditionResponse
+
+  """
+  Search Editions based on the inputted filters.
+  """
+  searchEditions(input: SearchEditionsInput!): SearchEditionsResponse
+
+  """
+  Gets an Edition listing
+  """
+  getEditionListing(input: GetEditionListingInput!): GetEditionListingResponse
+
+  """
+  Gets an Edition listing from the cache.
+  """
+  getEditionListingCached(input: GetEditionListingInput!): GetEditionListingResponse
+
+  """
+  getHotEditionListings returns edition listings that we deem to be "hot" (e.g. high
+  sales volume in the last x hours). The listings in the response should be ordered
+  from most to least host.
+  """
+  getHotEditionListings(input: GetHotEditionListingsInput): GetHotEditionListingsResponse
+
+  """
+  Search current Edition listings.
+  """
+  searchEditionListings(input: SearchEditionListingsInput!): SearchEditionListingsResponse
+
+  getExchangeRates(input: GetExchangeRatesInput!): GetExchangeRatesResponse!
+
+  getActiveDynamicLeaderboards: GetActiveDynamicLeaderboardsResponse
+
+  getDynamicLeaderboard(slug: String!): GetDynamicLeaderboardResponse
+
+  getDynamicLeaderboardEntries(input: GetDynamicLeaderboardEntriesInput!): GetDynamicLeaderboardEntriesResponse!
+
+  getDynamicLeaderboardEntry(input: GetDynamicLeaderboardEntryInput!): GetDynamicLeaderboardEntryResponse!
+
+  """
+  Get the current leaderboard.
+  """
+  getLeaderboard(input: GetLeaderboardInput!): GetLeaderboardResponse
+
+  """
+  Get an entry from the leaderboard.
+  """
+  getLeaderboardEntry(input: GetLeaderboardEntryInput!): GetLeaderboardEntryResponse
+
+  """
+  Get the leaderboard potential.
+  """
+  getLeaderboardPotential(input: GetLeaderboardPotentialInput!): GetLeaderboardPotentialResponse
+
+  """
+  Get the leaderboard entry relationships.
+  """
+  getLeaderboardEntryRelationships(input: GetLeaderboardEntryRelationshipInput!): GetLeaderboardEntryRelationshipResponse
+
+  """
+  Search the marketplace transactions.
+  """
+  searchMarketplaceTransactions(input: SearchMarketplaceTransactionsInput!): MarketplaceTransactionSearchSummaryResponse
+
+  """
+  Get the marketplace transaction edition stats.
+  """
+  getMarketplaceTransactionEditionStats(input: GetMarketplaceTransactionEditionStatsInput!): GetMarketplaceTransactionEditionStatsResponse
+
+  """
+  Get the latest marketplace transactions
+  """
+  getLatestMarketplaceTransactions: MarketplaceTransactionSearchSummaryResponse
+
+  searchMintedMoments(input: SearchMintedMomentsInput!): SearchMintedMomentsResponse
+
+  """
+  Get minted moment by id.
+  """
+  getMintedMoment(momentId: ID!): MintedMomentResponse
+
+  """
+  Get a list of minted moment by id.
+  """
+  getMintedMoments(input: GetMintedMomentsInput!): GetMintedMomentsResponse
+
+  """
+  Returns a list of all players.
+  """
+  allPlayers: Players
+
+  """
+  Search suggestions returns all players whose name contain the string given in the input field.
+  For example: "Lebron James", "bron J", and "James" would return Lebron James. However, "Lbron" would not.
+  """
+  getSearchSuggestions(input: SearchSuggestionsInput!): SearchSuggestions
+
+  """
+  Returns all players for a given League.
+  """
+  allPlayersByLeagues(input: AllPlayersByLeaguesInput!): Players
+
+  """
+  Get the soft currency price.
+  """
+  getSoftCurrencyPrice: GetSoftCurrencyPriceResponse
+
+  """
+  Returns a list of all teams.
+  """
+  allTeams: Teams
+
+  """
+  Returns a list of teams in a given League.
+  """
+  allTeamsByLeagues(input: AllTeamsByLeaguesInput!): Teams
+
+  searchMomentListings(input: SearchMomentListingsInput!): MomentListingsSearchSummaryResponse @deprecated(reason: "deprecated in favour of SearchEditionListings")
+
+  getUserMomentListings(input: GetUserMomentListingsInput!): UserMomentListingsResponse @deprecated(reason: "deprecated in favour of EditionListings")
+
+  getVendorMomentListing(input: GetVendorMomentListingInput!): GetVendorMomentListingResponse @deprecated(reason: "vendor endpoints aren't used")
+
+  """
+  Get the media uri from the moments flow id.
+  """
+  MomentMediaURI(momentFlowId: Int!): MomentMediaURIResponse
+
+  """
+  searchOffers will search for offers given the filters, sort by or a cursor
+  """
+  searchOffers(input: SearchOffersInput!): SearchOffersResponse
+
+  """
+  getOffer will search for offer by given id or offerAvailableTxHash or offercompletedTxHash, only one of these three input should be filled.
+  """
+  getOffer(input: GetOfferInput!): Offer!
+
+  """
+  Get on chain pack info by packID.
+  """
+  getOnChainPack(input: GetOnChainPackInput!): GetOnChainPackResponse
+
+  checkExistingP2POrders(input: CheckExistingP2POrdersInput!): CheckExistingP2POrdersResponse
+
+  """
+  Search pack listings. searchPackListings currently does not support limit/pagination/filters/sorts.
+  """
+  searchPackListings(input: SearchPackListingsInput!): SearchPackListingsResponse
+
+  """
+  Get pack listing based on the pack listing id,
+  """
+  getPackListing(input: GetPackListingInput!): GetPackListingResponse
+
+  getUserPackOrderByDapperId(input: GetUserPackOrderByDapperIdInput): GetUserPackOrderResponse
+
+  getUserPackOrdersByDapperId(dapperId: String!): GetUserPackOrdersResponse
+
+  """
+  Return user progress against sets + challenges.
+
+  If the `withPacks` field is filled in, this query will have the following behaviour:
+   - Return only Sets and Challenges that are relevant to those packs
+   - Consider moments in the user's account AND moments from the passed packs towards progress
+
+  When the `withPacks` field is not filled in, the behaviour is:
+   - Return all visible Sets and active Challenges
+   - Consider only moments in the user's account
+
+  In order to obtain the diff in user progress from before and after a series of pack openings,
+  this query should be called prior to pack opening, and then again with the `withPacks`
+  field filled in.
+  """
+  getPackSummaryProgress(input: GetPackSummaryProgressInput!): GetPackSummaryProgressResponse
+
+  """
+  Returns UserBallerStatus with only milestones relevant to Pack Opening.
+  """
+  getPackSummaryBallerStatus(input: GetPackSummaryBallerStatusInput!): UserBallerStatus
+
+  """
+  Get a list of packs by their IDs.
+  """
+  getPacks(input: GetPacksInput!): GetPacksResponse
+
+  """
+  Not yet implemented. searchPacks currently does not currently support limit/pagination/sorts.
+  """
+  searchPacks(input: SearchPacksInput!): SearchPacksResponse
+
+  """
+  Search packs for a users collection.
+  """
+  searchPacksForUserCollection(input: SearchPacksForUserCollectionInput!): PacksForUserCollectionSearchSummaryResponse
+
+  """
+  Get the players data with their current stats.
+  """
+  getPlayerDataWithCurrentStats(input: GetPlayerDataWithCurrentStatsInput): GetPlayerDataWithCurrentStatsResponse
+
+  searchPlays(input: SearchPlaysInput!): PlaySearchSummary
+
+  """
+  searchSets currently returns all sets in existence.
+  """
+  searchSets(input: SearchSetsInput!): SearchSetsResponse
+
+  """
+  Get a set by its id.
+  """
+  getSet(input: GetSetInput!): GetSetResponse
+
+  getShowcaseByID(showcaseID: ID!): Showcase
+
+  getUserShowcases(input: GetUserShowcasesInput!): GetUserShowcasesResponse
+
+  searchShowcases(input: SearchShowcasesInput!): SearchShowcasesResponse
+
+  """
+  Get special NFTs for a given user.
+  """
+  getUserOwnedSpecialNFTs(input: GetUserOwnedSpecialNFTsInput!): GetUserOwnedSpecialNFTsResponse
+
+  """
+  Get a list of special NFTs.
+  """
+  getSpecialNFTs(type: SpecialNFTType): GetSpecialNFTsResponse
+
+  """
+  Get a special NFT by it's flow ID.
+  """
+  getSpecialNFT(flowID: Int!): GetSpecialNFTResponse
+
+  """
+  Get a list of Tags.
+  """
+  getTags(input: GetTagsInput!): GetTagsResponse
+
+  getTickerData: GetTickerDataResponse
+
+  """
+  Get a Top Shot score by a users dapper ID.
+  """
+  topshotScore(input: GetTopshotScoreRequest!): TopshotScore!
+
+  """
+  Get a Top Shot score for a team series completion.
+  """
+  topshotScoreTeamSeriesCompletion(input: GetTopshotScoreTeamSeriesCompletionRequest!): GetTeamSeriesCompletionProgressResponse
+
+  """
+  Get a Top Shot score for all team series completion.
+  """
+  topshotScoreAllTeamsSeriesCompletion(input: GetTopshotScoreAllTeamsSeriesCompletionProgressRequest!): GetTopshotScoreAllTeamsSeriesCompletionProgressResponse
+
+  getUserTopshotTags(input: GetUserTopshotTagsRequest!): GetUserTopshotTagsResponse
+
+  """
+  ts50 is a query to list all polls for ts50 players.
+  The default behaviour of this API is to return polls in expiring asc order,
+  followed by polls that the user has completed voting for.
+  The query has an optional filter to filter by a particular player.
+  """
+  ts50: TS50
+
+  """
+  Search a users set associations.
+  """
+  searchUserSetAssociations(input: SearchUserSetAssociationsInput!): SearchUserSetAssociationsResponse
+
+  getUserProfile(input: GetUserProfileInput!): GetUserProfileResponse!
+
+  getUserProfileByUsername(input: getUserProfileByUsernameInput!): GetUserProfileResponse!
+
+  getUserEligibilityForJoiningPackListingQueue(input: GetUserEligibilityForJoiningPackListingQueueInput!): GetUserEligibilityForJoiningPackListingQueueResponse! @deprecated(reason: "use getPackListingEligibilityV2 instead")
+}
+
+input QueryElasticsearchInput {
+  index: String!
+
+  body: QueryElasticsearchInputBody!
+}
+
+input QueryElasticsearchInputBody {
+  query: Map
+
+  aggs: Map
+}
+
+type QueryElasticsearchResponse {
+  data: ElasticsearchResponse
+}
+
+type RSVPMetadata {
+  totalPacksReserved: Int!
+}
+
+enum RecommendationType {
+  NONE
+
+  SIGNUP
+
+  PERSONALIZED
+}
+
+enum ReferralType {
+  FIRST_PURCHASE
+}
+
+input RemoveAllEditionsFromWatchlistInput {
+  watchlistId: ID
+}
+
+type RemoveAllEditionsFromWatchlistResponse {
+  success: Boolean!
+}
+
+input RemoveEditionFromWatchlistInput {
+  watchlistId: ID
+
+  playID: String!
+
+  setID: String!
+}
+
+type RemoveEditionFromWatchlistResponse {
+  success: Boolean!
+}
+
+enum RemoveFromDropSquadError {
+  """
+  The caller of the mutation should be the owner
+  """
+  UNAUTHORIZED
+
+  """
+  The drop squad or member does not exist
+  """
+  NOT_FOUND
+}
+
+input RemoveFromDropSquadInput {
+  dropSquadID: ID!
+
+  memberID: ID!
+}
+
+type RemoveFromDropSquadResponse {
+  error: RemoveFromDropSquadError
+}
+
+input RemoveMomentsFromGroupInput {
+  momentGroupID: String!
+
+  momentIDs: [String!]
+}
+
+type RemoveMomentsFromGroupResponse {
+  momentIDs: [String!]
+}
+
+input RequestLoginUrlInput {
+  state: String
+
+  redirectUrl: String
+
+  loginHint: String
+}
+
+type RequestLoginUrlResponse {
+  url: String!
+}
+
+type Requirement {
+  """
+  The name of the requirement
+  """
+  name: String!
+
+  """
+  The enumerated name of the requirement
+  """
+  nameV2: RequirementName
+
+  """
+  The threshold at which the requirement is compared 
+  """
+  value: String!
+
+  """
+  Optional field if value is not of type string
+  """
+  valueType: ValueType
+
+  """
+  The operator with which the comparison uses,  i.e. "=", "<=", ">="
+  """
+  comparator: String!
+
+  """
+  Whether a user has qualified for this requirement
+  """
+  isQualified: Boolean
+
+  """
+  The user value for this requirement
+  """
+  userValue: String
+}
+
+enum RequirementName {
+  ALLOWLIST
+
+  TOPSHOT_SCORE
+
+  PACKS_PURCHASED
+
+  TRADE_TICKET
+
+  REMAINING_PACKS
+
+  MAX_ORDER_QUANTITY
+
+  MIN_MOMENTS_PURCHASED
+
+  PENDING_PACK_ORDER
+
+  COOLDOWN_TIME
+
+  FAVORITE_TEAM_MOMENTS_OWNED
+
+  PLAY_TYPE_HANDLES
+
+  PLAY_TYPE_DUNK
+
+  PLAY_TYPE_ASSIST
+
+  PLAY_TYPE_JUMPSHOT
+
+  PLAY_TYPE_STEAL
+
+  PLAY_TYPE_BLOCK
+
+  PLAY_TYPE_THREE_POINTER
+
+  PLAY_CATEGORY_LAYUP
+}
+
+input ReservePackInput {
+  packListingID: ID!
+
+  levelID: String
+
+  quantity: Int!
+
+  postPaymentRedirectURL: String!
+}
+
+type ReservePackResponse {
+  packReservation: PackReservation
+
+  error: ReservePackResponseError
+}
+
+enum ReservePackResponseError {
+  INELIGIBLE
+
+  EXCEEDED_QUANTITY
+
+  RESERVATION_EXISTS
+}
+
+input RevokeTokenInput {
+  refreshToken: String!
+}
+
+type RevokeTokenResponse {
+  success: Boolean!
+}
+
+enum Role {
+  SUPER_ADMIN
+
+  CREATOR_ADMIN
+
+  MARKETPLACE_ADMIN
+
+  REVIEWER_ADMIN
+}
+
+enum RsvpAuthorizeReservationError {
+  """
+  INVALID_TRANSACTION can occur when the requested transaction to be signed could not be signed due to a validation error
+  """
+  INVALID_TRANSACTION
+
+  """
+  RESERVATION_NOT_FOUND can occur when the reservation could not be found using the orderID
+  """
+  RESERVATION_NOT_FOUND
+}
+
+input RsvpAuthorizeReservationInput {
+  """
+  orderID is the unique identifier for the associated order
+  """
+  orderID: ID!
+
+  """
+  signable is the cadence transaction
+  """
+  signable: String!
+}
+
+type RsvpAuthorizeReservationResponse {
+  signature: String
+
+  error: RsvpAuthorizeReservationError
+}
+
+type RsvpReservation {
+  """
+  id is the unique identifier of the reservation
+  """
+  id: ID!
+
+  """
+  packListingID is the unique identifier of the pack listing
+  """
+  packListingID: ID!
+
+  """
+  levelID is the unique identifier of the queue/level for the pack listing. In most cases, RSVP drops will be single level
+  """
+  levelID: String!
+
+  """
+  quantity is the number of packs that the user reserved where there are no guarantees that all will be delivered 
+  """
+  quantity: Int!
+
+  """
+  status represents the current state of the RSVP Reservation
+  """
+  status: RsvpReservationStatus!
+
+  """
+  packs is the list of packs that were fulfilled as part of the order following distribution
+  """
+  packs: [Pack!]
+}
+
+input RsvpReservationFilter {
+  """
+  orderID is the unique identifier for the order
+  """
+  orderID: ID
+
+  """
+  packListingID is the unique identifier of the pack listing
+  """
+  packListingID: ID
+
+  """
+  levelID is the identifier of the pack listing level
+  """
+  levelID: ID
+}
+
+type RsvpReservationPayment {
+  confirmationRedirectURL: String!
+
+  price: PriceV2!
+}
+
+enum RsvpReservationStatus {
+  """
+  INITIATED is a state that represents a reservation being created, and is awaiting a request
+  from the client to kick off authorization.
+  """
+  INITIATED
+
+  """
+  AWAITING_PAYMENT_AUTHORIZATION is a state that represents a reservation that requires a payment authorization
+  to consider the RSVP valid.
+  """
+  AWAITING_PAYMENT_AUTHORIZATION
+
+  """
+  PAYMENT_AUTHORIZED is a state that represents a valid RSVP reservation which can be cancelled up until the distribution time.
+  """
+  PAYMENT_AUTHORIZED
+
+  """
+  CANCELLED is a state that represents an RSVP reservation has been cancelled or expired, 
+  where payment has never been authorized.
+  """
+  CANCELLED
+
+  """
+  PAYMENT_RELEASED is a state that represents an RSVP reservation which has been processed as part of distribution, and was not chosen
+  as a winning order. No packs were fulfilled.
+  """
+  PAYMENT_RELEASED
+
+  """
+  PAYMENT_CAPTURED is a state that represents an RSVP reservation which has been processed as part of distribution, and was chosen as a winning order.
+  Pack(s) have been fulfilled.
+  """
+  PAYMENT_CAPTURED
+}
+
+type SaleDto {
+  orderId: String
+
+  sellerAddress: String
+
+  buyerAddress: String
+
+  buyerId: String
+
+  buyerUsername: String
+
+  bidPrice: Price!
+
+  momentId: String
+
+  momentName: String
+
+  momentDescription: String
+
+  momentImageUrl: String
+
+  soldDateTime: Time
+
+  playId: String
+
+  playDescription: String
+
+  playerId: String
+
+  playerName: String
+
+  teamName: String
+
+  setVisualId: Int
+
+  setId: String
+
+  setSeries: Int
+
+  setName: String
+
+  serialNumber: Int
+}
+
+input SaveShowcaseInput {
+  showcaseID: ID
+
+  momentIDs: [ID!]
+
+  name: String
+
+  momentsOrder: [ShowcaseMomentOrderInput]
+
+  questID: ID
+}
+
+type SaveShowcaseResponse {
+  showcaseID: ID!
+}
+
+input SearchActivityInput {
+  filters: ActivityFiltersInput!
+
+  sortBy: ActivitySortType
+
+  searchInput: BaseSearchInput!
+}
+
+type SearchActivityResponse {
+  filters: ActivityFilters
+
+  sortBy: ActivitySortType
+
+  searchSummary: SearchSummary
+}
+
+input SearchChallengesInput {
+  filters: ChallengeFiltersInput
+
+  sortBy: ChallengeSortType
+
+  searchInput: BaseSearchInput!
+}
+
+type SearchChallengesResponse {
+  data: ChallengesSearchSummary
+}
+
+input SearchEditionListingsInput {
+  filters: EditionListingFilterInput!
+
+  sortBy: EditionListingSortType
+
+  searchInput: BaseSearchInput!
+
+  userID: ID
+}
+
+type SearchEditionListingsResponse {
+  data: SearchEditionListingsSummary
+}
+
+type SearchEditionListingsSummary {
+  filters: EditionListingsFilters
+
+  sortBy: EditionListingSortType
+
+  searchSummary: SearchSummary
+}
+
+input SearchEditionsInput {
+  filters: EditionFilterInput!
+}
+
+type SearchEditionsResponse {
+  filters: EditionFilters
+
+  searchSummary: SearchSummary
+}
+
+input SearchMarketplaceTransactionsInput {
+  filters: MarketplaceTransactionFiltersInput
+
+  sortBy: MarketplaceTransactionSortType
+
+  searchInput: BaseSearchInput!
+}
+
+input SearchMintedMomentsInput {
+  filters: MintedMomentFilterInput
+
+  sortBy: MintedMomentSortType
+
+  searchInput: BaseSearchInput!
+}
+
+type SearchMintedMomentsResponse {
+  data: MintedMomentSearchSummary
+}
+
+input SearchMomentGroupFilterInput {
+  addMomentsByMomentID: [ID!]
+}
+
+type SearchMomentGroupSummary {
+  searchSummary: SearchSummary
+}
+
+input SearchMomentGroupsInput {
+  filters: SearchMomentGroupFilterInput
+}
+
+type SearchMomentGroupsResponse {
+  data: SearchMomentGroupSummary
+}
+
+input SearchMomentListingsInput {
+  filters: MomentListingFilterInput!
+
+  sortBy: MomentListingSortType
+
+  searchInput: BaseSearchInput!
+
+  countOwnedSetPlaysForUserID: ID
+}
+
+type SearchOffersFilter {
+  createdByDapperIDs: [String!]
+
+  byMomentIDs: [String!]
+
+  byType: SearchOffersType
+
+  byOfferState: SearchOffersState
+
+  byPrice: PriceRangeFilter
+
+  byEditions: [EditionsFilter]
+
+  byOfferTypes: [OfferType!]
+
+  byOfferVisibility: OfferVisibilityFilter
+
+  byParallels: [Int!]
+}
+
+input SearchOffersFilterInput {
+  """
+  createdByDapperIDs will filter all offers created by users (using their dapper IDs)
+  """
+  createdByDapperIDs: [String!]
+
+  """
+  byMomentIDs will filter all offers for the given moments (list of moment IDs)
+  """
+  byMomentIDs: [String!]
+
+  """
+  byType will filter all offers using the Type enum:
+    - MADE: filter offers created by the logged user
+    - RECEIVED: filter offers received for the logged user
+  """
+  byType: SearchOffersType
+
+  """
+  byOfferState will filter all offers using the State enum (by default it will return OPENED offers):
+    - OPENED: filter offers which are not completed
+    - COMPLETED: filter offers which are completed
+    - CANCELED: filter offers which are completed but not purchased
+    - PURCHASED: filter offers which are completed and purchased
+    - ALL: return all offers 
+  """
+  byOfferState: SearchOffersState
+
+  """
+  byPrice will only return offers with prices falling inside the specified price range
+  """
+  byPrice: PriceRangeFilterInput
+
+  """
+  byEditions will filter all offers for the given editions
+  """
+  byEditions: [EditionsFilterInput]
+
+  """
+  byOfferTypes will filter all offers by offer-types (Serial, Edition)
+  """
+  byOfferTypes: [OfferType!]
+
+  """
+  byVisibility will filter all offers by offer visibility (hidden, unhidden)
+  """
+  byOfferVisibility: OfferVisibilityFilter
+
+  """
+  byParallels will filter all offers by moment/edition subedition
+  """
+  byParallels: [Int!]
+}
+
+input SearchOffersInput {
+  filters: SearchOffersFilterInput
+
+  sortBy: SearchOffersSortType
+
+  searchInput: BaseSearchInput!
+}
+
+type SearchOffersResponse {
+  data: SearchOffersSummary
+}
+
+enum SearchOffersSortType {
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  PRICE_ASC
+
+  PRICE_DESC
+}
+
+enum SearchOffersState {
+  OPENED
+
+  COMPLETED
+
+  CANCELED
+
+  PURCHASED
+
+  ALL
+}
+
+type SearchOffersSummary {
+  filters: SearchOffersFilter
+
+  sortBy: SearchOffersSortType
+
+  searchSummary: SearchSummary
+}
+
+enum SearchOffersType {
+  MADE
+
+  RECEIVED
+}
+
+input SearchPackListingsInput {
+  searchInput: BaseSearchInput!
+
+  filters: PackListingFiltersInput
+
+  sortBy: PackListingSortType
+}
+
+type SearchPackListingsResponse {
+  data: PackListingsSearchSummary
+}
+
+input SearchPacksForUserCollectionInput {
+  searchInput: BaseSearchInput!
+
+  filters: PacksFiltersInput
+}
+
+input SearchPacksInput {
+  searchInput: BaseSearchInput!
+
+  filters: PackFiltersInput
+}
+
+type SearchPacksResponse {
+  data: PackSearchSummary
+}
+
+input SearchPlaysInput {
+  sortBy: PlaySortType
+
+  filters: PlayFilterInput
+
+  searchInput: BaseSearchInput!
+}
+
+input SearchSetsFilterInput {
+  byLeagues: [League]
+}
+
+input SearchSetsInput {
+  searchInput: BaseSearchInput
+
+  filters: SearchSetsFilterInput
+}
+
+type SearchSetsResponse {
+  searchSummary: SearchSummary
+}
+
+input SearchShowcasesInput {
+  filters: ShowcasesFiltersInput!
+
+  sortBy: ShowcasesSortType
+
+  searchInput: BaseSearchInput!
+}
+
+type SearchShowcasesResponse {
+  data: ShowcasesSearchSummary
+}
+
+type SearchSuggestions {
+  playerSuggestions: [Player]
+}
+
+input SearchSuggestionsInput {
+  input: String!
+}
+
+type SearchSummary {
+  count: CountSummary
+
+  totalCount: Int
+
+  pagination: Pagination
+
+  data: SortableCollection
+}
+
+input SearchTeamCollectionInput {
+  userID: String!
+
+  teamID: String!
+
+  bySeries: TeamCollectionFiltersInput
+}
+
+type SearchTeamCollectionResponse {
+  bySeries: TeamCollectionFilters
+
+  teamCollection: CollectorTeamSeriesCounts
+
+  totalPlayers: Int
+
+  totalPlayersOwned: Int
+}
+
+input SearchUserSetAssociationsFiltersInput {
+  byIsCompleted: Boolean
+
+  bySets: [ID]
+}
+
+input SearchUserSetAssociationsInput {
+  searchInput: BaseSearchInput
+
+  sortBy: UserSetAssociationSortType
+
+  filters: SearchUserSetAssociationsFiltersInput
+}
+
+type SearchUserSetAssociationsResponse {
+  filters: UserSetAssociationFilters
+
+  sortBy: UserSetAssociationSortType
+
+  searchSummary: SearchSummary
+}
+
+input SearchUsersByLocationInput {
+  filters: SearchUsersFilterInput
+
+  sortBy: UserSearchSortType
+
+  searchInput: BaseSearchInput!
+}
+
+input SearchUsersFilterInput {
+  country: String
+
+  city: String
+
+  username: String
+}
+
+type SearchUsersResponse {
+  data: UserSearchSummary
+}
+
+input SearchWatchedEditionsInput {
+  searchInput: BaseSearchInput
+
+  sortBy: WatchedEditionsSortType
+
+  filters: WatchedEditionFiltersInput
+}
+
+type SearchWatchedEditionsResponse {
+  sortBy: WatchedEditionsSortType
+
+  searchSummary: SearchSummary
+
+  filters: WatchedEditionFilters
+}
+
+enum SeriesFilter {
+  SERIES_1
+
+  SERIES_2
+
+  SERIES_S2021
+
+  SERIES_3
+
+  SERIES_4
+}
+
+type Set implements Sortable & Syncable {
+  id: ID!
+
+  sortID: SortID
+
+  version: Version
+
+  flowId: Int
+
+  flowName: String
+
+  flowSeriesNumber: Int
+
+  flowLocked: Boolean
+
+  setVisualId: VisualIdType
+
+  assetPath: String
+
+  assets: SetAssets
+
+  plays: [Play!]
+
+  leagues: [League]
+}
+
+type SetAssets {
+  images: [SetImage]
+}
+
+type SetImage {
+  type: SetImageType
+
+  url: String!
+}
+
+enum SetImageType {
+  SET_IMAGE_TYPE_NIL
+
+  SPECIAL_EDITION_GAME_PANEL_EXTERIOR
+}
+
+type SetPlayCirculations {
+  ownedByCollectors: Int!
+
+  forSaleByCollectors: Int!
+
+  hiddenInPacks: Int!
+
+  unavailableForPurchase: Int!
+
+  circulationCount: Int!
+
+  burned: Int!
+
+  locked: Int!
+
+  availableForStuffing: Int!
+}
+
+type SetProgress {
+  set: Set
+
+  numTotalEditionSlots: Int
+
+  numFilledEditionSlots: Int
+}
+
+input SetSelectedUserTitlesInput {
+  titleIDs: [String!]!
+}
+
+type SetSelectedUserTitlesResponse {
+  ok: Boolean!
+}
+
+type Sets implements SortableCollection {
+  size: Int
+
+  data: [Set!]!
+}
+
+type SetsProgress {
+  progress: [SetProgress!]
+}
+
+type Shop {
+  packListings(first: Int, after: ID, orderBy: ShopPackListingsOrdering, filter: PackListingsFilter): ShopPackListingsConnection
+}
+
+type ShopPackListingsConnection {
+  pageInfo: PageInfo!
+
+  edges: [ShopPackListingsEdge!]
+}
+
+type ShopPackListingsEdge {
+  node: PackListing
+
+  eligibility: UserPackListingEligibility
+}
+
+input ShopPackListingsOrdering {
+  sort: UserPackListingsSort!
+
+  direction: Direction!
+}
+
+type Showcase implements Sortable & Syncable {
+  id: ID!
+
+  sortID: SortID!
+
+  version: Version!
+
+  name: String!
+
+  userID: ID!
+
+  momentIDs: [ID!]
+
+  moments: [MintedMoment!]
+
+  user: UserPublicInfo
+
+  momentsOrder: [ShowcaseMomentOrder]
+
+  questID: ID
+}
+
+type ShowcaseMomentOrder {
+  order: Int!
+
+  momentID: ID!
+}
+
+input ShowcaseMomentOrderInput {
+  order: Int!
+
+  momentID: ID!
+}
+
+type Showcases implements SortableCollection {
+  size: Int
+
+  data: [Showcase!]!
+}
+
+type ShowcasesFilters {
+  byUserID: String
+
+  byQuestID: ID
+
+  byShowcaseName: String
+}
+
+input ShowcasesFiltersInput {
+  byUserID: String
+
+  byQuestID: ID
+
+  byShowcaseName: String
+}
+
+type ShowcasesSearchSummary {
+  filters: ShowcasesFilters
+
+  sortBy: ShowcasesSortType
+
+  searchSummary: SearchSummary
+}
+
+enum ShowcasesSortType {
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  UPDATED_AT_ASC
+
+  UPDATED_AT_DESC
+}
+
+enum SignableType {
+  REPACK
+
+  MARKETPLACE_PACKS
+}
+
+scalar SortID
+
+interface Sortable {
+  sortID: SortID
+}
+
+interface SortableCollection {
+  data: [Sortable]
+
+  size: Int
+}
+
+type SpecialNFT {
+  flowID: Int!
+
+  seriesFlowID: Int!
+
+  version: Int!
+
+  type: SpecialNFTType!
+
+  set: SpecialSet!
+
+  acquiredAt: Time!
+
+  owner: NftOwner
+
+  originalOwner: NftOwner
+
+  momentTopshotScore: MomentTopshotScore
+
+  auction: Auction
+
+  price: Price
+}
+
+enum SpecialNFTType {
+  ALL_STAR_NFT
+
+  ANNIVERSARY_NFT
+
+  ALL_NFT
+}
+
+type SpecialNftPurchasedActivity {
+  specialNFT: SpecialNFT
+}
+
+type SpecialNftSoldActivity {
+  specialNFT: SpecialNFT
+}
+
+type SpecialSet {
+  flowID: Int!
+
+  seriesFlowID: Int!
+
+  seriesName: String!
+
+  version: Int!
+
+  vipCustomID: Int
+
+  name: String
+
+  description: String
+
+  assetUri: String
+
+  assetPreviewUri: String
+
+  additionalImages: String
+
+  assetFileType: String
+
+  metadata: metadata
+}
+
+type StatsPlayerGameScores {
+  blocks: Int
+
+  points: Int
+
+  steals: Int
+
+  assists: Int
+
+  minutes: String
+
+  rebounds: Int
+
+  turnovers: Int
+
+  plusMinus: Int
+
+  flagrantFouls: Int
+
+  personalFouls: Int
+
+  technicalFouls: Int
+
+  twoPointsMade: Int
+
+  blockedAttempts: Int
+
+  fieldGoalsMade: Int
+
+  freeThrowsMade: Int
+
+  threePointsMade: Int
+
+  defensiveRebounds: Int
+
+  offensiveRebounds: Int
+
+  pointsOffTurnovers: Int
+
+  twoPointsAttempted: Int
+
+  assistTurnoverRatio: Float
+
+  fieldGoalsAttempted: Int
+
+  freeThrowsAttempted: Int
+
+  twoPointsPercentage: Float
+
+  fieldGoalsPercentage: Float
+
+  freeThrowsPercentage: Float
+
+  threePointsAttempted: Int
+
+  threePointsPercentage: Float
+
+  playerPosition: PlayerPosition
+}
+
+type StatsPlayerSeasonAverageScores {
+  minutes: String
+
+  blocks: Float
+
+  points: Float
+
+  steals: Float
+
+  assists: Float
+
+  rebounds: Float
+
+  turnovers: Float
+
+  plusMinus: Float
+
+  flagrantFouls: Float
+
+  personalFouls: Float
+
+  technicalFouls: Float
+
+  twoPointsMade: Float
+
+  blockedAttempts: Float
+
+  fieldGoalsMade: Float
+
+  freeThrowsMade: Float
+
+  threePointsMade: Float
+
+  defensiveRebounds: Float
+
+  offensiveRebounds: Float
+
+  pointsOffTurnovers: Float
+
+  twoPointsAttempted: Float
+
+  assistTurnoverRatio: Float
+
+  fieldGoalsAttempted: Float
+
+  freeThrowsAttempted: Float
+
+  twoPointsPercentage: Float
+
+  fieldGoalsPercentage: Float
+
+  freeThrowsPercentage: Float
+
+  threePointsAttempted: Float
+
+  threePointsPercentage: Float
+
+  efficiency: Float
+
+  true_shooting_attempts: Float
+
+  points_in_paint_made: Float
+
+  points_in_paint_attempted: Float
+
+  points_in_paint: Float
+
+  fouls_drawn: Float
+
+  offensive_fouls: Float
+
+  fast_break_points: Float
+
+  fast_break_points_attempted: Float
+
+  fast_break_points_made: Float
+
+  second_chance_points: Float
+
+  second_chance_points_attempted: Float
+
+  second_chance_points_made: Float
+}
+
+"""
+The `String`scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+"""
+scalar String
+
+type StringTuple {
+  key: String!
+
+  value: String!
+}
+
+enum SubmitVoteForPollError {
+  POLL_NOT_STARTED
+
+  POLL_EXPIRED
+}
+
+input SubmitVoteForPollInput {
+  pollID: ID!
+
+  playID: ID!
+}
+
+type SubmitVoteForPollResponse {
+  error: SubmitVoteForPollError
+}
+
+interface Syncable {
+  id: ID!
+
+  version: Version
+}
+
+type TS50 {
+  """
+  polls is a list of TS50 polls which are released in small increments. The product term is called waves.
+  """
+  polls: [Poll!]!
+}
+
+type Tag {
+  id: ID!
+
+  name: String! @deprecated(reason: "name is from an old tag definition that is no longer used")
+
+  title: String!
+
+  visible: Boolean!
+
+  hardcourt: Boolean!
+
+  level: TagLevel!
+}
+
+enum TagLevel {
+  NIL
+
+  MOMENT
+
+  SETPLAY
+
+  PLAY
+}
+
+type Team {
+  id: ID!
+
+  name: String
+}
+
+type TeamCollectionFilters {
+  bySeries: SeriesFilter
+}
+
+input TeamCollectionFiltersInput {
+  bySeries: SeriesFilter
+}
+
+type TeamCompletionPlayer {
+  playerId: String!
+
+  playerName: String!
+
+  owned: Boolean!
+
+  locked: Boolean!
+}
+
+type TeamCompletionProgress {
+  ownedPlayerCount: Int!
+
+  lockedPlayerCount: Int!
+
+  requiredCount: Int!
+
+  teamId: ID!
+
+  players: [TeamCompletionPlayer]!
+
+  bonusPointsAvailable: Int!
+
+  bonusPointsEarned: Int!
+}
+
+type TeamLeaderboard implements Leaderboard {
+  id: String!
+
+  kind: LeaderboardKind!
+
+  entries: [LeaderboardUser]!
+}
+
+type TeamScoresByQuarter {
+  quarterScores: [QuarterScore]
+}
+
+type TeamSeriesCompletionProgress {
+  ownedPlayerCount: Int!
+
+  lockedPlayerCount: Int!
+
+  requiredCount: Int!
+
+  teamId: ID!
+
+  flowSeriesNumber: Int!
+
+  players: [TeamCompletionPlayer]!
+
+  bonusPointsAvailable: Int!
+
+  bonusPointsEarned: Int!
+}
+
+type TeamSeriesCompletionProgressBucket {
+  teamId: ID!
+
+  seriesProgress: [TeamSeriesCompletionProgress!]!
+
+  contemporaryProgress: TeamCompletionProgress!
+
+  allProgress: TeamCompletionProgress!
+}
+
+type Teams {
+  size: Int
+
+  data: [Team!]!
+}
+
+scalar Time
+
+type Title {
+  id: ID!
+
+  name: String!
+
+  description: String!
+
+  category: TitleCategory!
+
+  collectorCount: Int!
+
+  collectorFraction: Float!
+
+  createdAt: Time!
+
+  updatedAt: Time!
+}
+
+type TitleCategory {
+  id: ID!
+
+  name: String!
+}
+
+type TopshotScore {
+  dapperID: ID!
+
+  score: Int!
+
+  momentCount: Int!
+
+  bonusData: [TopshotScoreBonusData!]!
+}
+
+type TopshotScoreBonus {
+  bonusID: TopshotScoreBonusID!
+
+  bonusPts: Int!
+
+  qualified: Boolean!
+}
+
+type TopshotScoreBonusData {
+  name: String!
+
+  bonusTotal: Int!
+
+  bonuses: [TopshotScoreBonus!]!
+}
+
+enum TopshotScoreBonusID {
+  FAVORITE_TEAM
+
+  EARLY_ADOPTER
+}
+
+input TopshotScoreFilters {
+  byTeamIDs: [ID]
+
+  byPlayerIDs: [ID]
+}
+
+input TopshotScoreRequestBonusGroup {
+  name: String!
+
+  bonusIds: [TopshotScoreBonusID!]
+}
+
+type TotalBurnedMomentCountByRarity {
+  momentTier: MomentTier
+
+  momentCount: Int
+}
+
+input TransferPacksInput {
+  packIDs: [String!]!
+
+  receiverDapperID: String!
+}
+
+type TransferPacksResponse {
+  success: Boolean!
+}
+
+scalar URL
+
+input UnhideOffersInput {
+  offerIDs: [Int!]
+}
+
+type UnhideOffersResponse {
+  success: Boolean!
+}
+
+input UnpinMomentInput {
+  momentID: String!
+}
+
+type UnpinMomentResponse {
+  success: Boolean!
+}
+
+input UpdateMomentGroupInput {
+  momentGroupID: String!
+
+  name: String
+
+  order: Float
+}
+
+type UpdateMomentGroupResponse {
+  momentGroup: MomentGroup!
+}
+
+input UpdateNBAMarketingRequest {
+  ip: String!
+
+  email: String!
+
+  nbaNewsletter: Boolean!
+}
+
+type UpdateNBAMarketingResponse {
+  isSuccess: Boolean!
+}
+
+type UpdateUserSettingsResponse {
+  userSettings: UserSettings
+}
+
+input UpdateVariableChallengeSubmissionInput {
+  submissionID: ID!
+
+  challengeID: ID!
+
+  slots: [VariableChallengeSubmissionSlotInput!]!
+}
+
+input UpdateWatchlistInput {
+  id: ID!
+
+  title: String!
+}
+
+input UpsertUserProfileInput {
+  flowAddress: String
+
+  dapperID: String!
+
+  email: String!
+
+  username: String
+
+  profileImageUrl: String
+
+  twitterHandle: String
+
+  segmentId: String
+
+  favoriteTeamID: String
+
+  country: String
+
+  city: String
+}
+
+type UpsertUserProfileResponse {
+  dapperID: ID!
+}
+
+type User implements Sortable {
+  sortID: SortID
+
+  dapperID: String!
+
+  email: String! @deprecated(reason: "email is not a public field, will always be blank, will be removed soon")
+
+  flowAddress: String
+
+  username: String
+
+  profileImageUrl: String
+
+  twitterHandle: String
+
+  segmentID: String
+
+  country: String
+
+  city: String
+
+  topshotScore: Int
+}
+
+type UserBallerStatus {
+  level: BallerStatusLevel
+
+  totalPoints: Int
+
+  milestones: [UserBallerStatusMilestone]
+
+  dapperID: String!
+}
+
+type UserBallerStatusMilestone {
+  label: BallerStatusMilestoneLabel
+
+  orderedTasks: [UserBallerStatusTask]
+
+  numCompletedActions: Int
+
+  seenAt: Time
+}
+
+type UserBallerStatusTask {
+  points: Int
+
+  status: BallerStatusTaskStatus
+
+  numRequiredActions: Int
+}
+
+type UserBurnedMoment {
+  id: String
+
+  flowID: Int
+
+  flowSerialNumber: Int
+
+  subeditionID: Int
+
+  assetPathPrefix: String
+
+  flowSeriesNumber: Int
+
+  tier: MomentTier
+
+  flowName: String
+
+  visualID: VisualIdType
+
+  playID: String
+
+  headline: String
+
+  circulationCount: Int
+
+  username: String
+
+  profileImageURL: String
+
+  score: Int
+}
+
+type UserBurnedMomentStats {
+  username: String
+
+  profileImageURL: String
+
+  momentCount: Int
+}
+
+type UserBurnedTopshotScore {
+  username: String
+
+  profileImageURL: String
+
+  score: Int
+}
+
+type UserCampaignEventProgress {
+  timesCompleted: Int!
+
+  completedAt: Time
+}
+
+type UserChallenge implements Sortable & Syncable {
+  id: ID!
+
+  version: Version
+
+  sortID: SortID
+
+  name: String!
+
+  description: String!
+
+  expirationDate: Time
+
+  slots: [ChallengeSlot!]
+
+  reward: ChallengeReward
+
+  rewardStatus: ChallengeRewardStatus
+
+  numUsersCompleted: Int
+
+  numUserSubmissions: Int
+
+  type: ChallengeType!
+
+  variableChallenge: VariableChallenge
+
+  userSubmission: VariableChallengeSubmission
+
+  visibility: ChallengeVisibility
+
+  requirements: [Requirement!]
+
+  attributes: Map
+}
+
+type UserChallenges implements SortableCollection {
+  size: Int
+
+  data: [UserChallenge!]!
+}
+
+type UserMomentListing {
+  id: ID
+
+  version: Version
+
+  price: Price
+
+  moment: MintedMoment
+
+  seller: User
+}
+
+type UserMomentListings {
+  set: Set
+
+  play: Play
+
+  assetPathPrefix: String
+
+  version: Version
+
+  priceRange: PriceRange
+
+  momentListings: [UserMomentListing!]
+
+  setPlay: MintedSetPlay
+
+  circulationCount: Int @deprecated(reason: "use flowRetired field found inside mintedSetPlay instead")
+
+  flowRetired: Boolean @deprecated(reason: "use flowRetired field found inside mintedSetPlay instead")
+
+  momentListingCount: Int!
+}
+
+type UserMomentListingsResponse {
+  data: UserMomentListings
+}
+
+type UserPackListingEligibility {
+  isEligible: Boolean!
+
+  levels: [UserPackListingLevelEligibility!]
+
+  maxOrderQuantity: Int!
+}
+
+type UserPackListingLevelEligibility {
+  id: ID!
+
+  name: String!
+
+  isEligible: Boolean!
+
+  requirements: [Requirement!]
+
+  maxOrderQuantity: Int!
+}
+
+enum UserPackListingsSort {
+  CREATED_AT
+}
+
+type UserPublicInfo {
+  dapperID: String!
+
+  flowAddress: String
+
+  username: String
+
+  profileImageUrl: String
+
+  twitterHandle: String
+
+  createdAt: Time
+
+  favoriteTeamID: String
+
+  country: String
+
+  city: String
+
+  successfulReferrals: Int
+
+  ownedSpecialNFTTypes: [SpecialNFTType!]
+
+  collectorScore: CollectorScore
+
+  titles: [UserTitle!]
+}
+
+type UserSearchFilters {
+  country: String
+
+  city: String
+
+  username: String
+}
+
+enum UserSearchSortType {
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  TOPSHOT_SCORE_DESC
+}
+
+type UserSearchSummary {
+  filters: UserSearchFilters
+
+  sortBy: UserSearchSortType
+
+  searchSummary: SearchSummary
+}
+
+type UserSetAssociation implements Sortable {
+  sortID: SortID
+
+  setID: ID!
+
+  user: UserPublicInfo!
+
+  startedAt: Time
+
+  completedAt: Time
+
+  updatedAt: Time
+}
+
+type UserSetAssociationFilters {
+  byIsCompleted: Boolean
+
+  bySets: [ID]
+}
+
+enum UserSetAssociationSortType {
+  COMPLETED_AT_ASC
+
+  COMPLETED_AT_DESC
+
+  UPDATED_AT_ASC
+
+  UPDATED_AT_DESC
+}
+
+type UserSetAssociations implements SortableCollection {
+  size: Int
+
+  data: [UserSetAssociation!]!
+}
+
+type UserSettings {
+  notificationSettings: NotificationSettings
+
+  updatedAt: Time
+}
+
+input UserSettingsUpdateInput {
+  notificationSettings: NotificationSettingsInput
+}
+
+type UserTitle {
+  dapperID: ID!
+
+  title: Title!
+
+  isSelected: Boolean!
+
+  createdAt: Time!
+}
+
+type UserTopshotTag {
+  id: ID!
+
+  tagID: ID
+
+  dapperID: String
+
+  title: String
+
+  rewardedFromTitle: String
+
+  description: String
+
+  imageURL: String
+
+  videoURL: String
+
+  slug: String
+
+  obtainedAt: Time
+
+  createdAt: Time
+
+  updatedAt: Time
+}
+
+type Users implements SortableCollection {
+  size: Int
+
+  data: [User!]!
+}
+
+enum ValueType {
+  STRING
+
+  BOOLEAN
+
+  INT
+}
+
+type VariableChallenge {
+  id: ID!
+
+  Category: VariableChallengeCategory!
+
+  summary: String!
+
+  finePrint: String!
+
+  ribbonText: String!
+
+  prize: String!
+
+  startDate: Time!
+
+  assets: VariableChallengeAssets!
+
+  prerequisites: VariableChallengePrerequisites!
+
+  variableSlots: [VariableChallengeSlot!]!
+
+  pageData: VariableChallengePageData!
+}
+
+type VariableChallengeAssets {
+  image: String
+
+  video: String
+}
+
+enum VariableChallengeCategory {
+  SHOWCASE
+
+  FLASH
+
+  BURN
+
+  HYBRID
+}
+
+type VariableChallengePageData {
+  completedTitle: String
+
+  incompletedTitle: String
+
+  successDescription: String
+
+  successMedia: String
+}
+
+type VariableChallengePrerequisites {
+  prerequisites: [String!]
+}
+
+type VariableChallengeSlot {
+  id: ID!
+
+  label: String!
+
+  query: VariableChallengeSlotQuery!
+
+  slotOrder: Int!
+
+  helpText: String
+
+  slotType: VariableChallengeSlotType
+}
+
+type VariableChallengeSlotQuery {
+  byPlayers: [ID]
+
+  bySetPlayTagIDs: [ID]
+
+  byPlayTagIDs: [ID]
+
+  byPlayIDs: [ID]
+
+  byTeams: [ID]
+
+  bySets: [ID]
+
+  bySeries: [ID]
+
+  bySetVisuals: [ID]
+
+  byMomentTiers: [MomentTier]
+
+  byPlayCategory: [ID]
+
+  byActiveChallenge: [ID]
+
+  byPrimaryPlayerPosition: [PlayerPosition]
+
+  byLeagues: [League]
+
+  byGameDate: DateRangeFilter
+
+  byCreatedAt: DateRangeFilter
+
+  byPrice: PriceRangeFilter
+
+  byEditions: [EditionsFilter]
+}
+
+enum VariableChallengeSlotType {
+  NIL
+
+  SAVE
+
+  BURN
+
+  FREEZE
+
+  LOCK
+}
+
+type VariableChallengeSubmission {
+  id: ID!
+
+  status: VariableChallengeSubmissionStatus!
+
+  slots: [VariableChallengeSubmissionSlot!]
+
+  createdAt: Time!
+
+  updatedAt: Time!
+}
+
+type VariableChallengeSubmissionResponse {
+  id: ID!
+
+  challengeID: ID!
+
+  slots: [VariableChallengeSubmissionSlotResponse!]!
+
+  status: VariableChallengeSubmissionStatus!
+}
+
+type VariableChallengeSubmissionSlot {
+  id: ID!
+
+  slotID: ID!
+
+  momentID: ID!
+
+  createdAt: Time!
+
+  updatedAt: Time!
+}
+
+input VariableChallengeSubmissionSlotInput {
+  slotID: ID!
+
+  momentID: ID!
+}
+
+type VariableChallengeSubmissionSlotResponse {
+  id: ID!
+
+  slotID: ID!
+
+  momentID: ID!
+}
+
+enum VariableChallengeSubmissionStatus {
+  VALID
+
+  MISSING_REQUIREMENTS
+
+  BURNING_PENDING
+
+  USER_ACTION_PENDING
+}
+
+type VendorMomentListing {
+  id: ID
+
+  set: Set
+
+  play: Play
+
+  version: Version
+
+  price: Price
+
+  assetPathPrefix: String
+
+  """
+  admin-set previous price for sale display
+  """
+  previousPrice: Price
+
+  circulationCount: Int
+}
+
+scalar Version
+
+enum VisualIdType {
+  SET_VISUAL_NIL
+
+  SET_VISUAL_COMMON
+
+  SET_VISUAL_RARE
+
+  SET_VISUAL_LEGENDARY
+
+  SET_VISUAL_ULTIMATE
+
+  SET_VISUAL_FANDOM
+
+  SET_VISUAL_ANTHOLOGY
+}
+
+type WaitingRoom {
+  name: String
+
+  """
+  Whether the waiting room is active or not  
+  """
+  isActive: Boolean
+
+  """
+  The timestamp at which waiting room is to be active
+  """
+  activeAt: Time
+}
+
+type WatchedEdition implements Sortable {
+  sortID: SortID
+
+  playId: String!
+
+  setId: String!
+
+  watchlistId: String!
+
+  watchersCount: Int!
+
+  edition: Edition
+}
+
+type WatchedEditionFilters {
+  byWatchlistID: [ID!]
+
+  byWatchlistDapperID: [ID!]
+
+  byWatchedEdition: [WatchedEdition!]
+
+  byWatchlistTitle: [String!]
+}
+
+input WatchedEditionFiltersInput {
+  byWatchlistID: [ID!]
+
+  byWatchlistDapperID: [ID!]
+
+  byWatchedEdition: [WatchedEditionInput!]
+
+  byWatchlistTitle: [String!]
+}
+
+input WatchedEditionInput {
+  playID: ID!
+
+  setID: ID!
+}
+
+type WatchedEditions implements SortableCollection {
+  size: Int
+
+  data: [WatchedEdition!]!
+}
+
+enum WatchedEditionsSortType {
+  CREATED_AT_ASC
+
+  CREATED_AT_DESC
+
+  MOST_WATCHED_ASC
+
+  MOST_WATCHED_DESC
+
+  MOST_GAINED_ASC
+
+  MOST_GAINED_DESC
+}
+
+type Watchlist {
+  id: ID!
+
+  dapperID: ID!
+
+  title: String!
+
+  createdAt: Time!
+
+  updatedAt: Time!
+}
+
+type WatchlistData {
+  watcherCount: Int!
+
+  isWatchedByUser: Boolean!
+}
+
+type WatchlistResponse {
+  data: Watchlist
+}
+
+input getUserProfileByUsernameInput {
+  username: String!
+}
+
+enum headlineSourceType {
+  OVERRIDE
+
+  PLAYER
+
+  TEAM
+}
+
+union metadata = AllstarSetMetadata
+
+directive @authenticated on FIELD_DEFINITION
+
+"""
+The @deprecated built-in directive is used within the type system definition language to indicate deprecated portions of a GraphQL service's schema, such as deprecated fields on a type, arguments on a field, input fields on an input type, or values of an enum type.
+"""
+directive @deprecated (reason: String = "No longer supported") on FIELD_DEFINITION|ARGUMENT_DEFINITION|INPUT_FIELD_DEFINITION|ENUM_VALUE
+
+directive @goField (forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION|FIELD_DEFINITION
+
+directive @hasRole (role: Role!) on FIELD_DEFINITION
+
+"""
+The @include directive may be provided for fields, fragment spreads, and inline fragments, and allows for conditional inclusion during execution as described by the if argument.
+"""
+directive @include (if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+
+"""
+A directive used to explicitly omit a type from the documentation
+"""
+directive @noDoc on QUERY|MUTATION|SUBSCRIPTION|FIELD|FRAGMENT_DEFINITION|FRAGMENT_SPREAD|INLINE_FRAGMENT|VARIABLE_DEFINITION|SCHEMA|SCALAR|OBJECT|FIELD_DEFINITION|ARGUMENT_DEFINITION|INTERFACE|UNION|ENUM|ENUM_VALUE|INPUT_OBJECT|INPUT_FIELD_DEFINITION
+
+"""
+Checks if a feature is enabled before calling execution logic
+If the value for the specified flag returns 'false', then the directive "
+raises an error without exectuting the resolver.
+"""
+directive @requiresEnabledFeature (featureFlagKey: FeatureFlagKey!, errorMessage: String) on FIELD_DEFINITION
+
+"""
+Checks if Flow is enabled before calling execution logic
+If Flow ise set to be in maintenance mode via the FeatureFlowMaintenance flag,
+then the directive raises an error without exectuting the resolver.
+"""
+directive @requiresFlow on FIELD_DEFINITION
+
+directive @requiresKYC on FIELD_DEFINITION
+
+"""
+The @skip directive may be provided for fields, fragment spreads, and inline fragments, and allows for conditional exclusion during execution as described by the if argument.
+"""
+directive @skip (if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+
+"""
+The @specifiedBy built-in directive is used within the type system definition language to provide a scalar specification URL for specifying the behavior of custom scalar types.
+"""
+directive @specifiedBy (url: String!) on SCALAR
+
+directive @sumoAuthentication on FIELD_DEFINITION
+
+schema {
+  query: Query
+  mutation: Mutation
+}
