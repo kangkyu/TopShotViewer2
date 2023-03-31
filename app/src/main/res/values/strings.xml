@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TopShotViewer2</string>
+    <string name="button_details">Details</string>
+    <string name="button_back">Back</string>
 </resources>
