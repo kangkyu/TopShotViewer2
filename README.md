@@ -4,3 +4,4 @@ Android app for reading its GraphQL endpoints [developer document](https://devel
 
 Currently, it does:
 + Show all player list
++ Show player details for each player by a button
