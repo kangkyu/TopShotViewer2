@@ -1,0 +1,11 @@
+query PlayerDetails($playerId: ID!) {
+    getPlayerDataWithCurrentStats(input: {
+        nbaPlayerID: $playerId
+    }) {
+        playerData {
+            jerseyNumber
+            position
+        }
+    }
+}
+
