@@ -5,7 +5,12 @@ query PlayerDetails($playerId: ID!) {
         playerData {
             jerseyNumber
             position
+            height
+            weight
+            currentTeamId
+            currentTeamName
+            firstName
+            lastName
         }
     }
 }
-
