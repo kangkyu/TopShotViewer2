@@ -2,4 +2,6 @@
     <string name="app_name">TopShotViewer2</string>
     <string name="button_details">Details</string>
     <string name="button_back">Back</string>
+    <string name="bottom_players">Players</string>
+    <string name="bottom_favorites">Favorites</string>
 </resources>

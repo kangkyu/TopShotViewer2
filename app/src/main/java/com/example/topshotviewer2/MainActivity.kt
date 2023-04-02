@@ -11,6 +11,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -33,9 +36,35 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TopShotApp() {
     TopShotViewer2Theme {
-        Scaffold() { padding ->
+        Scaffold(
+            bottomBar = { TopShotBottomNavigation() }
+        ) { padding ->
             PlayerList(Modifier.padding(padding))
         }
+    }
+}
+
+@Composable
+fun TopShotBottomNavigation(modifier: Modifier = Modifier) {
+    BottomNavigation(modifier) {
+        BottomNavigationItem(selected = true, onClick = {},
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null
+                )
+            },
+            label = { Text(stringResource(R.string.bottom_players)) }
+        )
+        BottomNavigationItem(selected = false, onClick = {},
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null
+                )
+            },
+            label = { Text(stringResource(R.string.bottom_favorites)) }
+        )
     }
 }
 
@@ -73,17 +102,18 @@ fun PlayerList(modifier: Modifier = Modifier) {
                     Text(stringResource(R.string.button_back), style = MaterialTheme.typography.body2)
                 }
             }
-        }
+        },
+        gesturesEnabled = true,
+        drawerBackgroundColor = MaterialTheme.colors.background
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(vertical = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier
         ) {
             items(playerList) {player ->
-                PlayerView(player, modifier = modifier, onDetailsClick = {
+                PlayerView(player, onDetailsClick = {
                     scope.launch {
                         drawerState.open()
                         responseDetails = apolloClient.query(PlayerDetailsQuery(playerId = player.id)).execute()
@@ -95,7 +125,6 @@ fun PlayerList(modifier: Modifier = Modifier) {
             }
         }
     }
-
 }
 
 @Composable
@@ -123,4 +152,10 @@ fun DefaultPreview() {
             onDetailsClick = {}
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomNavigationPreview() {
+    TopShotViewer2Theme { TopShotBottomNavigation(Modifier.padding(top = 24.dp)) }
 }
