@@ -44,7 +44,7 @@ fun PlayerList(modifier: Modifier = Modifier) {
     var responseDetails: ApolloResponse<PlayerDetailsQuery.Data>? by remember { mutableStateOf(null) }
     var response: ApolloResponse<PlayerListQuery.Data>? by remember { mutableStateOf(null) }
     var playerDetails by remember {
-        mutableStateOf(PlayerDetailsQuery.PlayerData(jerseyNumber = null, position = null))
+        mutableStateOf(PlayerDetailsQuery.PlayerData(null, null, null, null, null, null, null, null))
     }
     var playerList by rememberSaveable { mutableStateOf(emptyList<PlayerListQuery.Data1>()) }
     LaunchedEffect(Unit) {
@@ -59,7 +59,10 @@ fun PlayerList(modifier: Modifier = Modifier) {
         drawerContent = {
             Column(modifier = Modifier.padding(16.dp)) {
                 if (drawerState.isOpen && responseDetails != null) {
+                    Text(playerDetails.firstName?.let { "$it" } ?: "", style = MaterialTheme.typography.h1)
+                    Text(playerDetails.lastName?.let { "$it" } ?: "", style = MaterialTheme.typography.h1)
                     Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" } ?: "details not available")
+                    Text(playerDetails.currentTeamName?.let { "Team Name: $it" } ?: "")
                     Text(playerDetails.position?.let { "Position: $it" } ?: "")
                 }
                 OutlinedButton(
@@ -101,7 +104,7 @@ fun PlayerView(player: PlayerListQuery.Data1, onDetailsClick: () -> Unit, modifi
         shape = MaterialTheme.shapes.small,
         modifier = modifier.clickable(onClick = { onDetailsClick() })
     ) {
-        Row(modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(player.name.toString(),
                 modifier = Modifier.padding(all = 4.dp),
                 style = MaterialTheme.typography.h3,
