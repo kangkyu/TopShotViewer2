@@ -1,7 +1,9 @@
 package com.example.topshotviewer2
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -11,10 +13,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,10 +38,44 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TopShotApp() {
+    val context = LocalContext.current
     TopShotViewer2Theme {
-        Scaffold() { padding ->
+        Scaffold(
+            bottomBar = { TopShotBottomNavigation(context = context) }
+        ) { padding ->
             PlayerList(Modifier.padding(padding))
         }
+    }
+}
+
+@Composable
+fun TopShotBottomNavigation(modifier: Modifier = Modifier, context: Context) {
+    BottomNavigation(modifier) {
+        BottomNavigationItem(selected = true, onClick = {},
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null
+                )
+            },
+            label = { Text(stringResource(R.string.bottom_players)) }
+        )
+        BottomNavigationItem(selected = false,
+            onClick = {
+                Toast.makeText(
+                    context,
+                    "Favorite is not yet implemented",
+                    Toast.LENGTH_LONG
+                ).show()
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null
+                )
+            },
+            label = { Text(stringResource(R.string.bottom_favorites)) }
+        )
     }
 }
 
@@ -73,17 +113,18 @@ fun PlayerList(modifier: Modifier = Modifier) {
                     Text(stringResource(R.string.button_back), style = MaterialTheme.typography.body2)
                 }
             }
-        }
+        },
+        gesturesEnabled = true,
+        drawerBackgroundColor = MaterialTheme.colors.background
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(vertical = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier
         ) {
             items(playerList) {player ->
-                PlayerView(player, modifier = modifier, onDetailsClick = {
+                PlayerView(player, onDetailsClick = {
                     scope.launch {
                         drawerState.open()
                         responseDetails = apolloClient.query(PlayerDetailsQuery(playerId = player.id)).execute()
@@ -95,7 +136,6 @@ fun PlayerList(modifier: Modifier = Modifier) {
             }
         }
     }
-
 }
 
 @Composable
@@ -123,4 +163,11 @@ fun DefaultPreview() {
             onDetailsClick = {}
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomNavigationPreview() {
+    val context = LocalContext.current
+    TopShotViewer2Theme { TopShotBottomNavigation(Modifier.padding(top = 24.dp), context = context) }
 }
