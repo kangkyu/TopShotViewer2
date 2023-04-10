@@ -1,7 +1,9 @@
 package com.example.topshotviewer2
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -18,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,9 +38,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TopShotApp() {
+    val context = LocalContext.current
     TopShotViewer2Theme {
         Scaffold(
-            bottomBar = { TopShotBottomNavigation() }
+            bottomBar = { TopShotBottomNavigation(context = context) }
         ) { padding ->
             PlayerList(Modifier.padding(padding))
         }
@@ -45,7 +49,7 @@ fun TopShotApp() {
 }
 
 @Composable
-fun TopShotBottomNavigation(modifier: Modifier = Modifier) {
+fun TopShotBottomNavigation(modifier: Modifier = Modifier, context: Context) {
     BottomNavigation(modifier) {
         BottomNavigationItem(selected = true, onClick = {},
             icon = {
@@ -56,7 +60,14 @@ fun TopShotBottomNavigation(modifier: Modifier = Modifier) {
             },
             label = { Text(stringResource(R.string.bottom_players)) }
         )
-        BottomNavigationItem(selected = false, onClick = {},
+        BottomNavigationItem(selected = false,
+            onClick = {
+                Toast.makeText(
+                    context,
+                    "Favorite is not yet implemented",
+                    Toast.LENGTH_LONG
+                ).show()
+            },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Star,
@@ -157,5 +168,6 @@ fun DefaultPreview() {
 @Preview(showBackground = true)
 @Composable
 fun BottomNavigationPreview() {
-    TopShotViewer2Theme { TopShotBottomNavigation(Modifier.padding(top = 24.dp)) }
+    val context = LocalContext.current
+    TopShotViewer2Theme { TopShotBottomNavigation(Modifier.padding(top = 24.dp), context = context) }
 }
