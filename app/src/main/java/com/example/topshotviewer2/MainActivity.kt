@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -57,10 +56,10 @@ fun PlayerList(modifier: Modifier = Modifier) {
     ModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = modifier) {
                 if (drawerState.isOpen && responseDetails != null) {
-                    Text(playerDetails.firstName?.let { "$it" } ?: "", style = MaterialTheme.typography.h1)
-                    Text(playerDetails.lastName?.let { "$it" } ?: "", style = MaterialTheme.typography.h1)
+                    Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h1)
+                    Text(playerDetails.lastName ?: "", style = MaterialTheme.typography.h1)
                     Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" } ?: "details not available")
                     Text(playerDetails.currentTeamName?.let { "Team Name: $it" } ?: "")
                     Text(playerDetails.position?.let { "Position: $it" } ?: "")
@@ -82,13 +81,16 @@ fun PlayerList(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = modifier
         ) {
-            items(playerList) {player ->
-                PlayerView(player, modifier = modifier, onDetailsClick = {
+            items(
+                items = playerList,
+                key = { player -> player.id }
+            ) {player ->
+                PlayerView(player, onDetailsClick = {
                     scope.launch {
                         drawerState.open()
                         responseDetails = apolloClient.query(PlayerDetailsQuery(playerId = player.id)).execute()
                         responseDetails?.data?.getPlayerDataWithCurrentStats?.playerData?.apply {
-                            playerDetails = this
+                            this.also { playerDetails = it }
                         }
                     }
                 })
