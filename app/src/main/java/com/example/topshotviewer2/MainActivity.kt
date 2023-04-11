@@ -75,7 +75,6 @@ fun PlayerListView(
 
     LaunchedEffect(Unit) {
         viewModel.refreshPlayers()
-        viewModel.refreshFavorites()
     }
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)

@@ -9,17 +9,9 @@ import com.example.topshotviewer2.model.Player
 import com.example.topshotviewer2.model.PlayerList
 import com.example.topshotviewer2.model.PlayerListPlayer
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 
 class PlayersRepository() {
-
-    // for now, store these in memory
-    private val favorites: MutableStateFlow<Set<String>>
-        get() = MutableStateFlow<Set<String>>(setOf())
-
-    fun observeFavorites(): Flow<Set<String>> = favorites
 
     suspend fun getPlayerList(): PlayerList {
         return withContext(Dispatchers.IO) {

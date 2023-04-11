@@ -18,14 +18,6 @@ class PlayerListViewModel(
     private val viewModelState = MutableStateFlow(PlayerListViewModelState(isLoading = false))
     val viewModelStatePublic: StateFlow<PlayerListViewModelState> = viewModelState.asStateFlow()
 
-    fun refreshFavorites() {
-        viewModelScope.launch {
-            playersRepository.observeFavorites().collect { favorites ->
-                viewModelState.update { it.copy(favorites = favorites) }
-            }
-        }
-    }
-
     fun refreshPlayers() {
         viewModelState.update { it.copy(isLoading = true) }
 
