@@ -1,9 +1,9 @@
 package com.example.topshotviewer2.model
 
 data class Player(
-    val id: Int,
-    val jerseyNumber: String,
-    val firstName: String, val lastName: String,
+    val jerseyNumber: String?,
+    val firstName: String?, val lastName: String?,
+    val currentTeamName: String?, val position: String?,
 )
 
 //public val jerseyNumber: String?,

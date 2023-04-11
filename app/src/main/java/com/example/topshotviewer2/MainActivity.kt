@@ -2,6 +2,7 @@ package com.example.topshotviewer2
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,11 +23,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import apolloClient
-import com.apollographql.apollo3.api.ApolloResponse
 import com.example.topshotviewer2.data.players.PlayersRepository
+import com.example.topshotviewer2.model.Player
 import com.example.topshotviewer2.model.PlayerListPlayer
 import com.example.topshotviewer2.ui.players.PlayerListViewModel
+import com.example.topshotviewer2.ui.players.PlayerViewModel
 import com.example.topshotviewer2.ui.theme.TopShotViewer2Theme
 import kotlinx.coroutines.launch
 
@@ -47,7 +48,8 @@ fun TopShotApp(
 ) {
     val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
-    val playerListRepository = PlayersRepository()
+    val playersRepository = PlayersRepository()
+
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = { TopShotBottomNavigation(context = context) }
@@ -55,37 +57,36 @@ fun TopShotApp(
         PlayerListView(
             modifier = modifier.padding(padding),
             viewModel = viewModel(
-                factory = PlayerListViewModel.provideFactory(playerListRepository)
+                factory = PlayerListViewModel.provideFactory(playersRepository)
+            ),
+            detailsViewModel = viewModel(
+                factory = PlayerViewModel.provideFactory(playersRepository)
             )
         )
     }
 }
 @Composable
-fun PlayerListView(modifier: Modifier = Modifier, viewModel: PlayerListViewModel = viewModel()) {
+fun PlayerListView(
+    modifier: Modifier = Modifier, viewModel: PlayerListViewModel = viewModel(),
+    detailsViewModel: PlayerViewModel = viewModel()
+) {
     val viewModelState by viewModel.viewModelStatePublic.collectAsState()
-    var responseDetails: ApolloResponse<PlayerDetailsQuery.Data>? by remember { mutableStateOf(null) }
-//    var response: ApolloResponse<PlayerListQuery.Data>? by remember { mutableStateOf(null) }
-    var playerDetails by remember {
-        mutableStateOf(PlayerDetailsQuery.PlayerData(null, null, null, null, null, null, null, null))
-    }
-//    var playerList by rememberSaveable { mutableStateOf(emptyList<PlayerListQuery.Data1>()) }
+    val detailsViewModelState by detailsViewModel.viewModelStatePublic.collectAsState()
+
     LaunchedEffect(Unit) {
         viewModel.refreshPlayers()
         viewModel.refreshFavorites()
     }
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    val playerDetails = detailsViewModelState.player
     ModalDrawer(
         drawerState = drawerState,
         drawerContent = {
             Column(modifier = modifier) {
-                if (drawerState.isOpen && responseDetails != null) {
-                    Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h1)
-                    Text(playerDetails.lastName ?: "", style = MaterialTheme.typography.h1)
-                    Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" } ?: "details not available")
-                    Text(playerDetails.currentTeamName?.let { "Team Name: $it" } ?: "")
-                    Text(playerDetails.position?.let { "Position: $it" } ?: "")
-                }
+                PlayerDetailsView(playerDetails)
+
                 OutlinedButton(
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -108,13 +109,11 @@ fun PlayerListView(modifier: Modifier = Modifier, viewModel: PlayerListViewModel
                 items = viewModelState.playerlist.allPlayers,
                 key = { player -> player.id }
             ) { player ->
-                PlayerView(player, onDetailsClick = {
+                PlayerListPlayerView(player, onDetailsClick = {
                     scope.launch {
                         drawerState.open()
-                        responseDetails = apolloClient.query(PlayerDetailsQuery(playerId = player.id)).execute()
-                        responseDetails?.data?.getPlayerDataWithCurrentStats?.playerData?.apply {
-                            this.also { playerDetails = it }
-                        }
+                        Log.d("MainActivity", "Player ID ${player.id}")
+                        detailsViewModel.loadPlayer(player.id)
                     }
                 })
             }
@@ -123,7 +122,23 @@ fun PlayerListView(modifier: Modifier = Modifier, viewModel: PlayerListViewModel
 }
 
 @Composable
-fun PlayerView(player: PlayerListPlayer, onDetailsClick: () -> Unit, modifier: Modifier = Modifier) {
+fun PlayerDetailsView(playerDetails: Player?) {
+    return if (playerDetails != null) {
+        Column {
+            Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h1)
+            Text(playerDetails.lastName ?: "", style = MaterialTheme.typography.h1)
+            Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" }
+                ?: "details not available")
+            Text(playerDetails.currentTeamName?.let { "Team Name: $it" } ?: "")
+            Text(playerDetails.position?.let { "Position: $it" } ?: "")
+        }
+    } else {
+        Text("Details not available")
+    }
+}
+
+@Composable
+fun PlayerListPlayerView(player: PlayerListPlayer, onDetailsClick: () -> Unit, modifier: Modifier = Modifier) {
     Surface(
         shape = MaterialTheme.shapes.small,
         modifier = modifier.clickable(onClick = { onDetailsClick() })
@@ -142,7 +157,7 @@ fun PlayerView(player: PlayerListPlayer, onDetailsClick: () -> Unit, modifier: M
 @Composable
 fun DefaultPreview() {
     TopShotViewer2Theme {
-        PlayerView(
+        PlayerListPlayerView(
             PlayerListPlayer(id="1630462", name="Aari McDonald"),
             modifier = Modifier.padding(8.dp),
             onDetailsClick = {}
@@ -152,13 +167,6 @@ fun DefaultPreview() {
 
 @Composable
 fun TopShotBottomNavigation(modifier: Modifier = Modifier, context: Context) {
-
-//    val playersRepository: PlayersRepository by lazy {
-//        PlayersRepository()
-//    }
-//    val playerListViewModel: PlayerListViewModel = viewModel(
-//        factory = PlayerListViewModel.provideFactory(playersRepository)
-//    )
 
     BottomNavigation(modifier) {
         BottomNavigationItem(selected = true, onClick = {},
