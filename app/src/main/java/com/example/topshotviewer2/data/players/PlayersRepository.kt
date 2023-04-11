@@ -9,10 +9,22 @@ import com.example.topshotviewer2.model.Player
 import com.example.topshotviewer2.model.PlayerList
 import com.example.topshotviewer2.model.PlayerListPlayer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
 class PlayersRepository() {
+    // for now, store these in memory
+    private val favorites: MutableStateFlow<Set<String>> = MutableStateFlow<Set<String>>(setOf())
 
+    fun observeFavorites(): Flow<Set<String>> = favorites
+
+    suspend fun toggleFavorite(favoritePlayerId: String) {
+        favorites.update {
+            it.addOrRemove(favoritePlayerId)
+        }
+    }
     suspend fun getPlayerList(): PlayerList {
         return withContext(Dispatchers.IO) {
             val response: ApolloResponse<PlayerListQuery.Data> =
@@ -34,11 +46,11 @@ class PlayersRepository() {
             val playerDetails: PlayerDetailsQuery.PlayerData? =
                 response.data?.getPlayerDataWithCurrentStats?.playerData
 
-            toPlayer(playerDetails)
+            toPlayer(playerDetails, playerId)
         }
     }
 
-    private fun toPlayer(playerDetails: PlayerDetailsQuery.PlayerData?): Player? {
+    private fun toPlayer(playerDetails: PlayerDetailsQuery.PlayerData?, playerId: String): Player? {
         if (playerDetails == null) {
             return null
         }
@@ -46,6 +58,7 @@ class PlayersRepository() {
             firstName = playerDetails.firstName, lastName = playerDetails.lastName,
             jerseyNumber = playerDetails.jerseyNumber,
             currentTeamName = playerDetails.currentTeamName, position = playerDetails.position,
+            id = playerId
         )
     }
 
@@ -54,4 +67,12 @@ class PlayersRepository() {
         player.name?.let { name = it }
         return PlayerListPlayer(id = player.id, name = name)
     }
+}
+
+internal fun <String> Set<String>.addOrRemove(element: String): Set<String> {
+    return this.toMutableSet().apply {
+        if (!add(element)) {
+            remove(element)
+        }
+    }.toSet()
 }
