@@ -28,7 +28,6 @@ class PlayersRepository() {
 
     suspend fun getPlayer(playerId: String): Player? {
         return withContext(Dispatchers.IO) {
-            Log.d("PlayerDetails", "Player ID ${playerId}")
             val response: ApolloResponse<PlayerDetailsQuery.Data> =
                 apolloClient.query(PlayerDetailsQuery(playerId = playerId)).execute()
             Log.d("PlayerDetails", "Success ${response.data}")

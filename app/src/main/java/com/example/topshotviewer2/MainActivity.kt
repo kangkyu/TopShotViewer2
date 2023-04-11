@@ -2,7 +2,6 @@ package com.example.topshotviewer2
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -111,7 +110,6 @@ fun PlayerListView(
                 PlayerListPlayerView(player, onDetailsClick = {
                     scope.launch {
                         drawerState.open()
-                        Log.d("MainActivity", "Player ID ${player.id}")
                         detailsViewModel.loadPlayer(player.id)
                     }
                 })
