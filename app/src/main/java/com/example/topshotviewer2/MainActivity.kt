@@ -1,8 +1,8 @@
 package com.example.topshotviewer2
 
-import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -12,12 +12,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,13 +46,15 @@ class MainActivity : ComponentActivity() {
 fun TopShotApp(
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val scaffoldState = rememberScaffoldState()
     val playersRepository = PlayersRepository()
+    var tabAll by remember { mutableStateOf(true) }
 
     Scaffold(
         scaffoldState = scaffoldState,
-        bottomBar = { TopShotBottomNavigation(context = context) }
+        bottomBar = {
+            TopShotBottomNavigation(onTabAllTrue = { tabAll = true }, onTabAllFalse = { tabAll = false })
+        }
     ) { padding ->
         PlayerListView(
             modifier = modifier.padding(padding),
@@ -60,20 +63,23 @@ fun TopShotApp(
             ),
             detailsViewModel = viewModel(
                 factory = PlayerViewModel.provideFactory(playersRepository)
-            )
+            ),
+            tabAll = tabAll
         )
     }
 }
+
 @Composable
 fun PlayerListView(
     modifier: Modifier = Modifier, viewModel: PlayerListViewModel = viewModel(),
-    detailsViewModel: PlayerViewModel = viewModel()
+    detailsViewModel: PlayerViewModel = viewModel(), tabAll: Boolean = false
 ) {
     val viewModelState by viewModel.viewModelStatePublic.collectAsState()
     val detailsViewModelState by detailsViewModel.viewModelStatePublic.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.refreshPlayers()
+        viewModel.refreshFavorites()
     }
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -83,7 +89,13 @@ fun PlayerListView(
         drawerState = drawerState,
         drawerContent = {
             Column(modifier = modifier) {
-                PlayerDetailsView(playerDetails)
+                PlayerDetailsView(
+                    playerDetails,
+                    onToggleFavorite = {
+                        playerDetails?.apply { viewModel.likeUnLike(this.id) }
+                    },
+                    isFavorite = viewModelState.favorites.contains(playerDetails?.id)
+                )
 
                 OutlinedButton(
                     onClick = {
@@ -103,31 +115,57 @@ fun PlayerListView(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            val all = viewModelState.playerlist.allPlayers
+            val playersLiked = viewModelState.favorites.map {
+                all.find { player -> player.id == it }!!
+            }
             items(
-                items = viewModelState.playerlist.allPlayers,
-                key = { player -> player.id }
+                items = if (tabAll) {
+                            all
+                        } else {
+                            playersLiked
+                        }
             ) { player ->
-                PlayerListPlayerView(player, onDetailsClick = {
-                    scope.launch {
-                        drawerState.open()
-                        detailsViewModel.loadPlayer(player.id)
+                PlayerListPlayerView(
+                    player,
+                    isFavorite = viewModelState.favorites.contains(player.id),
+                    onDetailsClick = {
+                        scope.launch {
+                            drawerState.open()
+                            detailsViewModel.loadPlayer(player.id)
+                        }
                     }
-                })
+                )
             }
         }
     }
 }
 
 @Composable
-fun PlayerDetailsView(playerDetails: Player?) {
+fun PlayerDetailsView(
+    playerDetails: Player?, onToggleFavorite: () -> Unit,
+    isFavorite: Boolean = false,
+) {
     return if (playerDetails != null) {
-        Column {
-            Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h1)
-            Text(playerDetails.lastName ?: "", style = MaterialTheme.typography.h1)
-            Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" }
-                ?: "details not available")
-            Text(playerDetails.currentTeamName?.let { "Team Name: $it" } ?: "")
-            Text(playerDetails.position?.let { "Position: $it" } ?: "")
+        Row {
+            Column {
+                Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h1)
+                Text(playerDetails.lastName ?: "", style = MaterialTheme.typography.h1)
+                Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" }
+                    ?: "details not available")
+                Text(playerDetails.currentTeamName?.let { "Team Name: $it" } ?: "")
+                Text(playerDetails.position?.let { "Position: $it" } ?: "")
+            }
+            TextButton(onClick = onToggleFavorite) {
+                Icon(
+                    imageVector = if (isFavorite) {
+                        Icons.Default.Favorite
+                    } else {
+                        Icons.Default.FavoriteBorder
+                    },
+                    contentDescription = null
+                )
+            }
         }
     } else {
         Text("Details not available")
@@ -135,7 +173,10 @@ fun PlayerDetailsView(playerDetails: Player?) {
 }
 
 @Composable
-fun PlayerListPlayerView(player: PlayerListPlayer, onDetailsClick: () -> Unit, modifier: Modifier = Modifier) {
+fun PlayerListPlayerView(
+    player: PlayerListPlayer, onDetailsClick: () -> Unit, modifier: Modifier = Modifier,
+    isFavorite: Boolean = false
+) {
     Surface(
         shape = MaterialTheme.shapes.small,
         modifier = modifier.clickable(onClick = { onDetailsClick() })
@@ -146,6 +187,12 @@ fun PlayerListPlayerView(player: PlayerListPlayer, onDetailsClick: () -> Unit, m
                 modifier = Modifier.padding(all = 4.dp),
                 style = MaterialTheme.typography.h3,
             )
+            if (isFavorite) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = null
+                )
+            }
         }
     }
 }
@@ -163,10 +210,13 @@ fun DefaultPreview() {
 }
 
 @Composable
-fun TopShotBottomNavigation(modifier: Modifier = Modifier, context: Context) {
-
+fun TopShotBottomNavigation(
+    modifier: Modifier = Modifier,
+    onTabAllTrue: () -> Unit, onTabAllFalse: () -> Unit
+) {
     BottomNavigation(modifier) {
-        BottomNavigationItem(selected = true, onClick = {},
+        BottomNavigationItem(selected = true,
+            onClick = onTabAllTrue,
             icon = {
                 Icon(
                     imageVector = Icons.Default.Person,
@@ -176,13 +226,7 @@ fun TopShotBottomNavigation(modifier: Modifier = Modifier, context: Context) {
             label = { Text(stringResource(R.string.bottom_players)) }
         )
         BottomNavigationItem(selected = false,
-            onClick = {
-                Toast.makeText(
-                    context,
-                    "\"Favorites\" is not yet implemented",
-                    Toast.LENGTH_LONG
-                ).show()
-            },
+            onClick = onTabAllFalse,
             icon = {
                 Icon(
                     imageVector = Icons.Default.Star,
@@ -197,6 +241,10 @@ fun TopShotBottomNavigation(modifier: Modifier = Modifier, context: Context) {
 @Preview(showBackground = true)
 @Composable
 fun BottomNavigationPreview() {
-    val context = LocalContext.current
-    TopShotViewer2Theme { TopShotBottomNavigation(Modifier.padding(top = 24.dp), context = context) }
+    TopShotViewer2Theme {
+        TopShotBottomNavigation(
+            Modifier.padding(top = 24.dp),
+            onTabAllTrue = {}, onTabAllFalse = {}
+        )
+    }
 }

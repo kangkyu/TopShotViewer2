@@ -4,4 +4,5 @@ data class Player(
     val jerseyNumber: String?,
     val firstName: String?, val lastName: String?,
     val currentTeamName: String?, val position: String?,
+    val id: String,
 )
