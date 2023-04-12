@@ -12,10 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +32,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TopShotViewer2Theme {
+            MaterialTheme {
                 TopShotApp()
             }
         }
@@ -53,7 +50,10 @@ fun TopShotApp(
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
-            TopShotBottomNavigation(onTabAllTrue = { tabAll = true }, onTabAllFalse = { tabAll = false })
+            TopShotBottomNavigation(
+                onTabAllTrue = { tabAll = true }, onTabAllFalse = { tabAll = false },
+                playerTab = tabAll,
+            )
         }
     ) { padding ->
         PlayerListView(
@@ -81,56 +81,42 @@ fun PlayerListView(
         viewModel.refreshPlayers()
         viewModel.refreshFavorites()
     }
-    val scope = rememberCoroutineScope()
+
+    val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
     val playerDetails = detailsViewModelState.player
     ModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Column(modifier = modifier) {
-                PlayerDetailsView(
-                    playerDetails,
-                    onToggleFavorite = {
-                        playerDetails?.apply { viewModel.likeUnLike(this.id) }
-                    },
-                    isFavorite = viewModelState.favorites.contains(playerDetails?.id)
-                )
-
-                OutlinedButton(
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                    }
-                ) {
-                    Text(stringResource(R.string.button_back), style = MaterialTheme.typography.body2)
+            PlayerDetailsView(
+                modifier = modifier.padding(start = 16.dp, top = 32.dp),
+                playerDetails = playerDetails,
+                isFavorite = viewModelState.favorites.contains(playerDetails?.id),
+                onClickLike = {
+                    playerDetails?.apply { viewModel.likeUnLike(this.id) }
                 }
-            }
+            )
         },
         gesturesEnabled = true,
         drawerBackgroundColor = MaterialTheme.colors.background
     ) {
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Adaptive(160.dp),
             contentPadding = PaddingValues(vertical = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             val all = viewModelState.playerlist.allPlayers
-            val playersLiked = viewModelState.favorites.map {
-                all.find { player -> player.id == it }!!
-            }
+            val playersLiked = viewModelState.favorites.map { all.find { player -> player.id == it } }.filterNotNull()
             items(
-                items = if (tabAll) {
-                            all
-                        } else {
-                            playersLiked
-                        }
+                items = if (tabAll) all else playersLiked
             ) { player ->
                 PlayerListPlayerView(
                     player,
                     isFavorite = viewModelState.favorites.contains(player.id),
                     onDetailsClick = {
-                        scope.launch {
+                        coroutineScope.launch {
                             drawerState.open()
                             detailsViewModel.loadPlayer(player.id)
                         }
@@ -143,32 +129,37 @@ fun PlayerListView(
 
 @Composable
 fun PlayerDetailsView(
-    playerDetails: Player?, onToggleFavorite: () -> Unit,
-    isFavorite: Boolean = false,
+    modifier: Modifier = Modifier, playerDetails: Player?, isFavorite: Boolean,
+    onClickLike: () -> Unit,
 ) {
-    return if (playerDetails != null) {
-        Row {
-            Column {
-                Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h1)
-                Text(playerDetails.lastName ?: "", style = MaterialTheme.typography.h1)
-                Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" }
-                    ?: "details not available")
+    Column(modifier = modifier) {
+        if (playerDetails != null) {
+            Column(horizontalAlignment = Alignment.Start) {
+                Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h3)
+                Text(playerDetails.lastName ?: "", style = MaterialTheme.typography.h3)
+                Spacer(Modifier.size(8.dp))
+                Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" } ?: "")
                 Text(playerDetails.currentTeamName?.let { "Team Name: $it" } ?: "")
                 Text(playerDetails.position?.let { "Position: $it" } ?: "")
             }
-            TextButton(onClick = onToggleFavorite) {
+            Spacer(Modifier.size(98.dp))
+            Divider()
+            Spacer(Modifier.size(16.dp))
+            Button(
+                onClick = onClickLike
+            ) {
+                // Inner content including an icon and a text label
                 Icon(
-                    imageVector = if (isFavorite) {
-                        Icons.Default.Favorite
-                    } else {
-                        Icons.Default.FavoriteBorder
-                    },
-                    contentDescription = null
+                    if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = null,
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(if (isFavorite) "Liked" else "Like")
             }
+        } else {
+            Text("Details not available")
         }
-    } else {
-        Text("Details not available")
     }
 }
 
@@ -185,7 +176,7 @@ fun PlayerListPlayerView(
             Text(
                 text = player.name,
                 modifier = Modifier.padding(all = 4.dp),
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.body1,
             )
             if (isFavorite) {
                 Icon(
@@ -212,10 +203,11 @@ fun DefaultPreview() {
 @Composable
 fun TopShotBottomNavigation(
     modifier: Modifier = Modifier,
-    onTabAllTrue: () -> Unit, onTabAllFalse: () -> Unit
+    onTabAllTrue: () -> Unit, onTabAllFalse: () -> Unit,
+    playerTab: Boolean,
 ) {
     BottomNavigation(modifier) {
-        BottomNavigationItem(selected = true,
+        BottomNavigationItem(selected = playerTab,
             onClick = onTabAllTrue,
             icon = {
                 Icon(
@@ -225,7 +217,7 @@ fun TopShotBottomNavigation(
             },
             label = { Text(stringResource(R.string.bottom_players)) }
         )
-        BottomNavigationItem(selected = false,
+        BottomNavigationItem(selected = !playerTab,
             onClick = onTabAllFalse,
             icon = {
                 Icon(
@@ -244,7 +236,8 @@ fun BottomNavigationPreview() {
     TopShotViewer2Theme {
         TopShotBottomNavigation(
             Modifier.padding(top = 24.dp),
-            onTabAllTrue = {}, onTabAllFalse = {}
+            onTabAllTrue = {}, onTabAllFalse = {},
+            playerTab = true
         )
     }
 }
