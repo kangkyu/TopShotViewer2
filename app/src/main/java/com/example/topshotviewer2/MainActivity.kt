@@ -51,15 +51,6 @@ fun TopShotApp(
         scaffoldState = scaffoldState,
         bottomBar = {
             TopShotBottomNavigation(onTabAllTrue = { tabAll = true }, onTabAllFalse = { tabAll = false })
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    /* TODO */
-                }
-            ) {
-                Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Skip")
-            }
         }
     ) { padding ->
         PlayerListView(
