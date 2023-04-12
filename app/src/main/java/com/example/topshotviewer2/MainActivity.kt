@@ -50,7 +50,10 @@ fun TopShotApp(
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
-            TopShotBottomNavigation(onTabAllTrue = { tabAll = true }, onTabAllFalse = { tabAll = false })
+            TopShotBottomNavigation(
+                onTabAllTrue = { tabAll = true }, onTabAllFalse = { tabAll = false },
+                playerTab = tabAll,
+            )
         }
     ) { padding ->
         PlayerListView(
@@ -134,11 +137,14 @@ fun PlayerDetailsView(
             Column(horizontalAlignment = Alignment.Start) {
                 Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h3)
                 Text(playerDetails.lastName ?: "", style = MaterialTheme.typography.h3)
+                Spacer(Modifier.size(8.dp))
                 Text(playerDetails.jerseyNumber?.let { "Jersey Number: $it" } ?: "")
                 Text(playerDetails.currentTeamName?.let { "Team Name: $it" } ?: "")
                 Text(playerDetails.position?.let { "Position: $it" } ?: "")
             }
+            Spacer(Modifier.size(98.dp))
             Divider()
+            Spacer(Modifier.size(16.dp))
             Button(
                 onClick = onClickLike
             ) {
@@ -197,10 +203,11 @@ fun DefaultPreview() {
 @Composable
 fun TopShotBottomNavigation(
     modifier: Modifier = Modifier,
-    onTabAllTrue: () -> Unit, onTabAllFalse: () -> Unit
+    onTabAllTrue: () -> Unit, onTabAllFalse: () -> Unit,
+    playerTab: Boolean,
 ) {
     BottomNavigation(modifier) {
-        BottomNavigationItem(selected = true,
+        BottomNavigationItem(selected = playerTab,
             onClick = onTabAllTrue,
             icon = {
                 Icon(
@@ -210,7 +217,7 @@ fun TopShotBottomNavigation(
             },
             label = { Text(stringResource(R.string.bottom_players)) }
         )
-        BottomNavigationItem(selected = false,
+        BottomNavigationItem(selected = !playerTab,
             onClick = onTabAllFalse,
             icon = {
                 Icon(
@@ -229,7 +236,8 @@ fun BottomNavigationPreview() {
     TopShotViewer2Theme {
         TopShotBottomNavigation(
             Modifier.padding(top = 24.dp),
-            onTabAllTrue = {}, onTabAllFalse = {}
+            onTabAllTrue = {}, onTabAllFalse = {},
+            playerTab = true
         )
     }
 }
