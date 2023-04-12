@@ -20,7 +20,7 @@ class PlayersRepository() {
 
     fun observeFavorites(): Flow<Set<String>> = favorites
 
-    suspend fun toggleFavorite(favoritePlayerId: String) {
+    fun toggleFavorite(favoritePlayerId: String) {
         favorites.update {
             it.addOrRemove(favoritePlayerId)
         }
