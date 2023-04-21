@@ -145,13 +145,11 @@ fun PlayerDetailsView(
             Spacer(Modifier.size(98.dp))
             Divider()
             Spacer(Modifier.size(16.dp))
-            Button(
-                onClick = onClickLike
-            ) {
+            Button(onClick = onClickLike) {
                 // Inner content including an icon and a text label
                 Icon(
                     if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                    contentDescription = null,
+                    contentDescription = "Like button",
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
@@ -181,7 +179,7 @@ fun PlayerListPlayerView(
             if (isFavorite) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
-                    contentDescription = null
+                    contentDescription = "Liked Player"
                 )
             }
         }
@@ -212,7 +210,7 @@ fun TopShotBottomNavigation(
             icon = {
                 Icon(
                     imageVector = Icons.Default.Person,
-                    contentDescription = null
+                    contentDescription = "Players"
                 )
             },
             label = { Text(stringResource(R.string.bottom_players)) }
@@ -222,7 +220,7 @@ fun TopShotBottomNavigation(
             icon = {
                 Icon(
                     imageVector = Icons.Default.Star,
-                    contentDescription = null
+                    contentDescription = "Favorite Players"
                 )
             },
             label = { Text(stringResource(R.string.bottom_favorites)) }

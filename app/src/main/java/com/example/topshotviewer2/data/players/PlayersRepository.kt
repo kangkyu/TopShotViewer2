@@ -25,6 +25,7 @@ class PlayersRepository() {
             it.addOrRemove(favoritePlayerId)
         }
     }
+
     suspend fun getPlayerList(): PlayerList {
         return withContext(Dispatchers.IO) {
             val response: ApolloResponse<PlayerListQuery.Data> =
