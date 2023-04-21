@@ -7,9 +7,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -20,10 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.topshotviewer2.data.players.MintedMomentRepository
 import com.example.topshotviewer2.data.players.PlayersRepository
 import com.example.topshotviewer2.model.Player
 import com.example.topshotviewer2.model.PlayerListPlayer
 import com.example.topshotviewer2.ui.players.PlayerListViewModel
+import com.example.topshotviewer2.ui.players.PlayerMomentsViewModel
 import com.example.topshotviewer2.ui.players.PlayerViewModel
 import com.example.topshotviewer2.ui.theme.TopShotViewer2Theme
 import kotlinx.coroutines.launch
@@ -133,6 +137,7 @@ fun PlayerDetailsView(
     onClickLike: () -> Unit,
 ) {
     Column(modifier = modifier) {
+        val mintedMomentRepository = MintedMomentRepository()
         if (playerDetails != null) {
             Column(horizontalAlignment = Alignment.Start) {
                 Text(playerDetails.firstName ?: "", style = MaterialTheme.typography.h3)
@@ -155,8 +160,32 @@ fun PlayerDetailsView(
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 Text(if (isFavorite) "Liked" else "Like")
             }
+            PlayerMomentsView(
+                viewModel = viewModel(
+                    factory = PlayerMomentsViewModel.provideFactory(mintedMomentRepository)
+                )
+            )
         } else {
             Text("Details not available")
+        }
+    }
+}
+
+@Composable
+fun PlayerMomentsView(viewModel: PlayerMomentsViewModel = viewModel()) {
+    val viewModelState by viewModel.viewModelStatePublic.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.loadMoments()
+    }
+    LazyColumn {
+        val mintedMoments = viewModelState.momentList.moments
+        items(items = mintedMoments) { moment ->
+            Column {
+                Text(moment.playerTitle)
+                Text(moment.tierName)
+                Text(moment.serialNumber)
+                Text(moment.thumbnail)
+            }
         }
     }
 }
