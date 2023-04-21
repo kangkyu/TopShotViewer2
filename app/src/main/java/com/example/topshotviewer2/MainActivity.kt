@@ -220,6 +220,7 @@ fun UserMomentListView(
                 Text(moment.serialNumber)
                 Text(moment.thumbnail)
             }
+            Divider()
         }
     }
 }
