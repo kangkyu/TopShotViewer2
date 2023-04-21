@@ -49,34 +49,65 @@ fun TopShotApp(
 ) {
     val scaffoldState = rememberScaffoldState()
     val playersRepository = PlayersRepository()
-    var tabAll by remember { mutableStateOf(true) }
+    var allPlayersTab by remember { mutableStateOf(true) }
+    var usersTab by remember { mutableStateOf(false) }
+    var favoritesTab by remember { mutableStateOf(false) }
 
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
             TopShotBottomNavigation(
-                onTabAllTrue = { tabAll = true }, onTabAllFalse = { tabAll = false },
-                playerTab = tabAll,
+                onTabPlayers = {
+                    allPlayersTab = true
+                    favoritesTab = false
+                    usersTab = false
+                },
+                onTabFavorites = {
+                    allPlayersTab = false
+                    favoritesTab = true
+                    usersTab = false
+                },
+                onTabUser = {
+                    allPlayersTab = false
+                    favoritesTab = false
+                    usersTab = true
+                },
+                playerTab = allPlayersTab,
+                favoriteTab = favoritesTab,
+                userTab = usersTab,
             )
         }
     ) { padding ->
-        PlayerListView(
-            modifier = modifier.padding(padding),
-            viewModel = viewModel(
-                factory = PlayerListViewModel.provideFactory(playersRepository)
-            ),
-            detailsViewModel = viewModel(
-                factory = PlayerViewModel.provideFactory(playersRepository)
-            ),
-            tabAll = tabAll
-        )
+        if (allPlayersTab || favoritesTab) {
+            PlayerListView(
+                modifier = modifier.padding(padding),
+                viewModel = viewModel(
+                    factory = PlayerListViewModel.provideFactory(playersRepository)
+                ),
+                detailsViewModel = viewModel(
+                    factory = PlayerViewModel.provideFactory(playersRepository)
+                ),
+                tabPlayer = allPlayersTab,
+                tabUser = usersTab,
+                tabFavorites = favoritesTab,
+            )
+        } else if (usersTab) {
+            val playerMomentRepository = MintedMomentRepository()
+            UserMomentListView(
+                modifier = modifier.padding(padding),
+                viewModel = viewModel(
+                    factory = PlayerMomentsViewModel.provideFactory(playerMomentRepository)
+                ),
+            )
+        }
     }
 }
 
 @Composable
 fun PlayerListView(
     modifier: Modifier = Modifier, viewModel: PlayerListViewModel = viewModel(),
-    detailsViewModel: PlayerViewModel = viewModel(), tabAll: Boolean = false
+    detailsViewModel: PlayerViewModel = viewModel(), tabPlayer: Boolean = false,
+    tabUser: Boolean = false, tabFavorites: Boolean = false,
 ) {
     val viewModelState by viewModel.viewModelStatePublic.collectAsState()
     val detailsViewModelState by detailsViewModel.viewModelStatePublic.collectAsState()
@@ -113,8 +144,13 @@ fun PlayerListView(
         ) {
             val all = viewModelState.playerlist.allPlayers
             val playersLiked = viewModelState.favorites.map { all.find { player -> player.id == it } }.filterNotNull()
+
             items(
-                items = if (tabAll) all else playersLiked
+                items = if (tabPlayer) {
+                    all
+                } else {
+                    playersLiked
+                }
             ) { player ->
                 PlayerListPlayerView(
                     player,
@@ -160,11 +196,6 @@ fun PlayerDetailsView(
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 Text(if (isFavorite) "Liked" else "Like")
             }
-            PlayerMomentsView(
-                viewModel = viewModel(
-                    factory = PlayerMomentsViewModel.provideFactory(mintedMomentRepository)
-                )
-            )
         } else {
             Text("Details not available")
         }
@@ -172,12 +203,15 @@ fun PlayerDetailsView(
 }
 
 @Composable
-fun PlayerMomentsView(viewModel: PlayerMomentsViewModel = viewModel()) {
+fun UserMomentListView(
+    modifier: Modifier = Modifier,
+    viewModel: PlayerMomentsViewModel = viewModel()
+) {
     val viewModelState by viewModel.viewModelStatePublic.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.loadMoments()
     }
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         val mintedMoments = viewModelState.momentList.moments
         items(items = mintedMoments) { moment ->
             Column {
@@ -230,12 +264,12 @@ fun DefaultPreview() {
 @Composable
 fun TopShotBottomNavigation(
     modifier: Modifier = Modifier,
-    onTabAllTrue: () -> Unit, onTabAllFalse: () -> Unit,
-    playerTab: Boolean,
+    onTabPlayers: () -> Unit, onTabFavorites: () -> Unit, onTabUser: () -> Unit,
+    playerTab: Boolean, favoriteTab: Boolean, userTab: Boolean,
 ) {
     BottomNavigation(modifier) {
         BottomNavigationItem(selected = playerTab,
-            onClick = onTabAllTrue,
+            onClick = onTabPlayers,
             icon = {
                 Icon(
                     imageVector = Icons.Default.Person,
@@ -244,8 +278,8 @@ fun TopShotBottomNavigation(
             },
             label = { Text(stringResource(R.string.bottom_players)) }
         )
-        BottomNavigationItem(selected = !playerTab,
-            onClick = onTabAllFalse,
+        BottomNavigationItem(selected = favoriteTab,
+            onClick = onTabFavorites,
             icon = {
                 Icon(
                     imageVector = Icons.Default.Star,
@@ -253,6 +287,16 @@ fun TopShotBottomNavigation(
                 )
             },
             label = { Text(stringResource(R.string.bottom_favorites)) }
+        )
+        BottomNavigationItem(selected = userTab,
+            onClick = onTabUser,
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Face,
+                    contentDescription = "User Moments"
+                )
+            },
+            label = { Text(stringResource(R.string.bottom_user)) }
         )
     }
 }
@@ -263,8 +307,8 @@ fun BottomNavigationPreview() {
     TopShotViewer2Theme {
         TopShotBottomNavigation(
             Modifier.padding(top = 24.dp),
-            onTabAllTrue = {}, onTabAllFalse = {},
-            playerTab = true
+            onTabPlayers = {}, onTabFavorites = {}, onTabUser = {},
+            playerTab = true, favoriteTab = false, userTab = false,
         )
     }
 }
