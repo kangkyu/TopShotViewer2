@@ -1,0 +1,33 @@
+query MintedMoments($ownerFlowAddress: String) {
+    searchMintedMoments(input: {
+        filters: {
+            byOwnerFlowAddress: [$ownerFlowAddress]
+        },
+        searchInput: {
+            pagination: {
+                cursor: ""
+                direction: RIGHT
+                limit: 20
+            }
+        }
+    }) {
+        data {
+            searchSummary {
+                data {
+                    data {
+                        ... on MintedMoment {
+                            tier
+                            assetPathPrefix
+                            flowSerialNumber
+                            play {
+                                stats {
+                                    playerName
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
